@@ -105,7 +105,11 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
     public float getStarRating() {
 
         Log.v(TAG, "getStarRating");
-        return 0;
+        float result = 0F;
+        if(mAdModel != null) {
+            result = mAdModel.getRating();
+        }
+        return result;
     }
 
     @Override
