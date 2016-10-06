@@ -34,6 +34,7 @@ import net.pubnative.mediation.utils.PubnativeStringUtils;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -116,9 +117,10 @@ public class PubnativeHttpTask extends AsyncTask<String, Void, String> {
                             connection.setUseCaches(false);
                             connection.setDoInput(true);
                             connection.setDoOutput(true);
+                            connection.setRequestProperty("Content-Length", Integer.toString(mPostString.getBytes().length));
                             OutputStream connectionOutputStream = connection.getOutputStream();
-                            DataOutputStream wr = new DataOutputStream(connectionOutputStream);
-                            wr.writeBytes(mPostString);
+                            OutputStreamWriter wr = new OutputStreamWriter(connectionOutputStream, "UTF-8");
+                            wr.write(mPostString);
                             wr.flush();
                             wr.close();
                         }

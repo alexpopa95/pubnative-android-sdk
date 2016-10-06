@@ -35,7 +35,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21)
 @PrepareForTest(PubnativeInsightDataModel.class)
 public class PubnativeInsightDataModelTest {
 

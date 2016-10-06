@@ -61,7 +61,7 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
     protected PubnativeNetworkRequest.Listener mListener;
     protected PubnativeConfigModel             mConfig;
     protected PubnativeAdModel                 mAd;
-    protected PubnativeInsightDataModel        mTrackingModel;
+    protected PubnativeInsightDataModel        mTrackingModel = new PubnativeInsightDataModel();
     protected String                           mAppToken;
     protected String                           mPlacementID;
     protected int                              mCurrentNetworkIndex;
@@ -69,6 +69,7 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
     protected boolean                          mIsRunning;
     protected Handler                          mHandler;
     protected String                           mRequestID;
+    protected Map<String, String>              mRequestParameters;
     //==============================================================================================
     // Listener
     //==============================================================================================
@@ -113,7 +114,7 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
      * @param placementID valid placementId provided by Pubnative.
      * @param listener    valid Listener to keep track of request callbacks.
      */
-    public void start(Context context, String appToken, String placementID, PubnativeNetworkRequest.Listener listener) {
+    public synchronized void start(Context context, String appToken, String placementID, PubnativeNetworkRequest.Listener listener) {
 
         Log.v(TAG, "start: -placement: " + placementID + " -appToken:" + appToken);
         if (listener == null) {
@@ -130,7 +131,7 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
                 } else {
                     mIsRunning = true;
                     mContext = context;
-                    mTrackingModel = new PubnativeInsightDataModel();
+                    mTrackingModel.reset();
                     mAppToken = appToken;
                     mPlacementID = placementID;
                     mCurrentNetworkIndex = -1;
@@ -146,12 +147,35 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
         }
     }
 
+    /**
+     * Sets specific parameter for the request if applicable to the target network
+     * @param key
+     * @param value
+     */
+    public void setParameter(String key, String value) {
+
+        Log.v(TAG, "setParameter");
+        if (mRequestParameters == null) {
+            mRequestParameters = new HashMap<String, String>();
+        }
+        mRequestParameters.put(key, value);
+    }
+
     protected void getConfig(String appToken, PubnativeConfigManager.Listener listener) {
 
         Log.v(TAG, "getConfig");
         // This method getConfig() here gets the stored/downloaded mConfig and
         // continues to startRequest() in it's callback "onConfigLoaded()".
-        PubnativeConfigManager.getConfig(mContext, appToken, listener);
+        Map<String, String> extras = new HashMap<String, String>();
+        extras.put("app_token", mAppToken);
+        if(mRequestParameters != null) {
+            extras.putAll(mRequestParameters);
+        }
+        if(mTrackingModel != null) {
+            extras.putAll(mTrackingModel.getTrackingParameters());
+        }
+
+        PubnativeConfigManager.getConfig(mContext, appToken, extras, listener);
     }
 
     protected void startRequest(PubnativeConfigModel configModel) {
@@ -167,7 +191,7 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
             } else if (placement.delivery_rule == null || placement.priority_rules == null) {
                 invokeFail(new Exception("PubnativeNetworkRequest - Error: retrieved config contains null elements for placement " + mPlacementID));
             } else if (placement.delivery_rule.isDisabled()) {
-               invokeFail(new Exception("PubnativeNetworkRequest - Error: placement \'" + mPlacementID + "\' is disabled"));
+                invokeFail(new Exception("PubnativeNetworkRequest - Error: placement \'" + mPlacementID + "\' is disabled"));
             } else if (placement.priority_rules.size() == 0) {
                 invokeFail(new Exception("PubnativeNetworkRequest - Error: no networks configured for placement: " + mPlacementID));
             } else {
@@ -252,6 +276,10 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
                     // Add ML extras for adapter
                     Map<String, String> extras = new HashMap<String, String>();
                     extras.put(TRACKING_PARAMETER_REQUEST_ID, mRequestID);
+                    if(mRequestParameters != null) {
+                        extras.putAll(mRequestParameters);
+                    }
+                    extras.putAll(mTrackingModel.getTrackingParameters());
                     adapter.setExtras(extras);
                     adapter.doRequest(mContext, networkModel.timeout, this);
                 }
@@ -364,6 +392,10 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put(TRACKING_PARAMETER_APP_TOKEN, mAppToken);
         parameters.put(TRACKING_PARAMETER_REQUEST_ID, mRequestID);
+        if(mRequestParameters != null) {
+            parameters.putAll(mRequestParameters);
+        }
+        parameters.putAll(mTrackingModel.getTrackingParameters());
         return parameters;
     }
 
@@ -391,6 +423,12 @@ public class PubnativeNetworkRequest implements PubnativeNetworkAdapter.Listener
     public enum Gender {
         MALE,
         FEMALE
+    }
+
+    public void addKeyword(String keyword) {
+
+        Log.v(TAG, "addKeyword: " + keyword);
+        mTrackingModel.addKeyword(keyword);
     }
 
     public void setGender(Gender gender) {

@@ -57,7 +57,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 @PrepareForTest(PubnativeInsightsManager.class)
 public class PubnativeInsightsManagerTest {

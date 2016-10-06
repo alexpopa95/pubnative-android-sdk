@@ -141,10 +141,10 @@ public abstract class PubnativeNetworkAdapter {
             Log.e(TAG, "doRequest - context not specified, dropping the call");
         } else {
             mListener = listener;
+            invokeStart();
             if (context == null) {
                 invokeFailed(new IllegalArgumentException("PubnativeNetworkAdapter - Error: null context provided"));
             } else {
-                invokeStart();
                 startTimeout(timeoutInMillis);
                 request(context);
             }

@@ -53,7 +53,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 @PrepareForTest({PubnativeAdModel.class, PubnativeInsightsManager.class, PubnativeDeliveryManager.class})
 public class PubnativeAdModelTest {

@@ -97,7 +97,7 @@ public class PubnativeConfigManagerTest {
         // Valid getConfig  >> Should return an initializedConfig
         PubnativeConfigTestUtils.setTestConfig(this.applicationContext, VALID_CONFIG_NAME, TEST_APP_TOKEN_VALUE);
         PubnativeConfigManager.Listener listenerSpy = spy(PubnativeConfigManager.Listener.class);
-        PubnativeConfigManager.getConfig(this.applicationContext, TEST_APP_TOKEN_VALUE, listenerSpy);
+        PubnativeConfigManager.getConfig(this.applicationContext, TEST_APP_TOKEN_VALUE, null, listenerSpy);
         verify(listenerSpy, times(1)).onConfigLoaded(any(PubnativeConfigModel.class));
     }
 

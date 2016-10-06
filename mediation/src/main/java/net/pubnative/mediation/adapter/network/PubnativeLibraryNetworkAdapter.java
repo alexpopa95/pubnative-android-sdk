@@ -64,17 +64,17 @@ public class PubnativeLibraryNetworkAdapter extends PubnativeNetworkAdapter impl
 
         Log.v(TAG, "createRequest");
         PubnativeRequest request = new PubnativeRequest();
-        // We add all params
-        for (Object key : mData.keySet()) {
-            Object value = mData.get(key);
-            request.setParameter((String) key, value.toString());
-        }
         Map<String, String> extraMap = getExtras();
-        // Add extras
+        // We add all extras (hard coded)
         if (extraMap != null) {
             for (String key : extraMap.keySet()) {
                 request.setParameter(key, extraMap.get(key));
             }
+        }
+        // We add all params (network configured)
+        for (Object key : mData.keySet()) {
+            Object value = mData.get(key);
+            request.setParameter((String) key, value.toString());
         }
         request.start(context, PubnativeRequest.Endpoint.NATIVE, this);
     }

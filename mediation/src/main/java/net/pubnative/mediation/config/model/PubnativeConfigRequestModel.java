@@ -27,11 +27,24 @@ import android.content.Context;
 
 import net.pubnative.mediation.config.PubnativeConfigManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PubnativeConfigRequestModel {
 
     public Context                         context;
-    public String                          appToken;
     public PubnativeConfigManager.Listener listener;
+    public Map<String, String>             parameters;
+
+    public void setAppToken(String appToken) {
+        if(parameters == null) {
+            parameters = new HashMap<String, String>();
+        }
+        parameters.put("app_token", appToken);
+    }
+    public String getAppToken() {
+        return parameters.get("app_token");
+    }
     //==============================================================================================
     // PubnativeConfigRequestModel
     //==============================================================================================

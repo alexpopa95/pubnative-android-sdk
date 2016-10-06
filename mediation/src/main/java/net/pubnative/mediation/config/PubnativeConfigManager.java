@@ -25,6 +25,7 @@ package net.pubnative.mediation.config;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -39,6 +40,7 @@ import net.pubnative.mediation.task.PubnativeHttpTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -89,15 +91,16 @@ public class PubnativeConfigManager {
      * @param appToken unique identification key provided by Pubnative for mediation sdk
      * @param listener listener to be used for tracking the config loaded callback
      */
-    public synchronized static void getConfig(Context context, String appToken, PubnativeConfigManager.Listener listener) {
+    public synchronized static void getConfig(Context context, String appToken, Map<String, String> extras, PubnativeConfigManager.Listener listener) {
 
         Log.v(TAG, "getConfig: " + appToken);
         if (context != null && !TextUtils.isEmpty(appToken)) {
             if (listener != null) {
                 PubnativeConfigRequestModel item = new PubnativeConfigRequestModel();
                 item.context = context;
-                item.appToken = appToken;
                 item.listener = listener;
+                item.parameters = extras;
+                item.setAppToken(appToken);
                 enqueueRequest(item);
                 doNextConfigRequest();
             }
@@ -130,24 +133,24 @@ public class PubnativeConfigManager {
             PubnativeConfigRequestModel item = dequeueRequest();
             if (item != null) {
                 sIdle = false;
-                getNextConfig(item.context, item.appToken, item.listener);
+                getNextConfig(item);
             }
         }
     }
 
-    private static void getNextConfig(Context context, String appToken, PubnativeConfigManager.Listener listener) {
+    private static void getNextConfig(PubnativeConfigRequestModel model) {
 
-        Log.v(TAG, "getNextConfig: " + appToken);
-        if (context != null && !TextUtils.isEmpty(appToken)) {
+        Log.v(TAG, "getNextConfig: " + model.getAppToken());
+        if (model.context != null && !TextUtils.isEmpty(model.getAppToken())) {
             // Downloads if needed
-            if (configNeedsUpdate(context, appToken)) {
-                downloadConfig(context, listener, appToken);
+            if (configNeedsUpdate(model.context, model.getAppToken())) {
+                downloadConfig(model);
             } else {
-                serveStoredConfig(context, listener);
+                serveStoredConfig(model.context, model.listener);
             }
         } else {
             // ensuring null config is returned
-            invokeLoaded(listener, null);
+            invokeLoaded(model.listener, null);
         }
     }
 
@@ -207,32 +210,38 @@ public class PubnativeConfigManager {
         }
     }
 
-    protected synchronized static void downloadConfig(final Context context, final PubnativeConfigManager.Listener listener, final String appToken) {
+    protected synchronized static void downloadConfig(final PubnativeConfigRequestModel model) {
 
         Log.v(TAG, "downloadConfig");
-        if (context != null && !TextUtils.isEmpty(appToken)) {
-            String downloadURLString = getConfigDownloadBaseUrl(context) + APP_TOKEN_KEY + appToken;
-            PubnativeHttpTask http = new PubnativeHttpTask(context);
+        if (model.context != null && !TextUtils.isEmpty(model.getAppToken())) {
+
+            Uri.Builder builder = Uri.parse(getConfigDownloadBaseUrl(model.context)).buildUpon();
+            for (String key : model.parameters.keySet()) {
+                String value = model.parameters.get(key);
+                builder.appendQueryParameter(key, value);
+            }
+            String downloadURLString = builder.build().toString();
+            PubnativeHttpTask http = new PubnativeHttpTask(model.context);
             http.setListener(new PubnativeHttpTask.Listener() {
 
                 @Override
                 public void onHttpTaskSuccess(PubnativeHttpTask task, String result) {
 
                     Log.v(TAG, "onHttpTaskSuccess");
-                    processConfigDownloadResponse(context, appToken, result);
-                    serveStoredConfig(context, listener);
+                    processConfigDownloadResponse(model.context, model.getAppToken(), result);
+                    serveStoredConfig(model.context, model.listener);
                 }
 
                 @Override
                 public void onHttpTaskFailed(PubnativeHttpTask task, String errorMessage) {
 
                     Log.v(TAG, "onHttpTaskFailed: " + errorMessage);
-                    serveStoredConfig(context, listener);
+                    serveStoredConfig(model.context, model.listener);
                 }
             });
             http.execute(downloadURLString);
         } else {
-            serveStoredConfig(context, listener);
+            serveStoredConfig(model.context, model.listener);
         }
     }
 

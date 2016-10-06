@@ -65,7 +65,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 @PrepareForTest({PubnativeNetworkRequest.class, PubnativeNetworkAdapterFactory.class, PubnativeConfigManager.class})
 public class PubnativeNetworkRequestTest {

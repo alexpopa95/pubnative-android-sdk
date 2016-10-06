@@ -1,36 +1,53 @@
+//==================================================================================================
+// PROJECT
+//==================================================================================================
+version=project.version?:"BETA"
+group=project.group?:"net.pubnative"
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+        // BINTRAY
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        // COVERALLS
+        classpath 'net.saliman:gradle-cobertura-plugin:2.3.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+    }
+}
+task projectInfo << {
+    println ""
+    println " === ${project.group}:${project.name}:${version} - (${System.getenv("CIRCLE_BUILD_NUM")}) ==="
+    println ""
+}
+//==================================================================================================
+// ANDROID
+//==================================================================================================
 apply plugin: 'com.android.library'
-//apply plugin: 'com.jfrog.bintray'
-//apply plugin: 'com.github.dcendents.android-maven'
-
-version = '1.0.2'
-//group = 'net.pubnative'
-
-def sharedVersion = version
-
 android {
     compileSdkVersion 10
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 21
-        versionCode 27
-        versionName sharedVersion
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
+        targetSdkVersion 10
+        versionCode System.getenv("CIRCLE_BUILD_NUM")?System.getenv("CIRCLE_BUILD_NUM").toInteger():1
+        versionName project.version?:"BETA"
     }
     buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.code.gson:gson:2.3.1'
@@ -46,86 +63,75 @@ dependencies {
     testCompile 'org.powermock:powermock-api-mockito:1.6.2'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
 }
-
-tasks.withType(Test) {
-    testLogging.exceptionFormat = 'full'
+//==================================================================================================
+// COVERALLS
+//==================================================================================================
+apply plugin: "net.saliman.cobertura"
+apply plugin: "com.github.kt3k.coveralls"
+cobertura.coverageFormats = ['html', 'xml']
+//==================================================================================================
+// BINTRAY
+//==================================================================================================
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name project.name
+                description "Pubnative API library fro Android"
+                url "http://www.pubnative.net"
+                licenses {
+                    license {
+                        name "MIT"
+                        url "https://opensource.org/licenses/MIT"
+                    }
+                }
+                developers {
+                    developer {
+                        id "cerberillo"
+                        name "David Martin"
+                        email "david@martinmacias.com"
+                    }
+                }
+                scm {
+                    connection "${project.property("repositoryURL")}.git"
+                    developerConnection "${project.property("repositoryURL")}.git"
+                    url project.property("repositoryURL")
+                }
+            }
+        }
+    }
 }
-
-//install {
-//    repositories.mavenInstaller {
-//        // This generates POM.xml with proper parameters
-//        pom {
-//            project {
-//                packaging 'aar'
-//
-//                name "pubnative-android-mediation-sdk"
-//                description "Pubnative mediation for Android"
-//                url "http://www.pubnative.net"
-//
-//                // Set your license
-//                licenses {
-//                    license {
-//                        name "MIT"
-//                        url "https://opensource.org/licenses/MIT"
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id "cerberillo"
-//                        name "David Martin"
-//                        email "david@martinmacias.com"
-//                    }
-//                }
-//                scm {
-//                    connection "https://github.com/pubnative/pubnative-android-mediation-sdk.git"
-//                    developerConnection "https://github.com/pubnative/pubnative-android-mediation-sdk.git"
-//                    url "https://github.com/pubnative/pubnative-android-mediation-sdk"
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//Properties properties = new Properties()
-//properties.load(project.rootProject.file('local.properties').newDataInputStream())
-//
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives javadocJar
-//    archives sourcesJar
-//}
-//
-//bintray {
-//    user = properties.getProperty('bintray.user')
-//    key = properties.getProperty('bintray.api_key')
-//    configurations = ['archives']
-//    publish=true
-//    pkg {
-//        userOrg = 'pubnative'
-//        repo = 'maven'
-//        name = 'pubnative-android-mediation-sdk'
-//        websiteUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk'
-//        issueTrackerUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk/issues'
-//        vcsUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk.git'
-//        labels = ['pubnative', 'advertising', 'ad']
-//        licenses = ['MIT']
-//        version {
-//            name=sharedVersion
-//            vcsTag=sharedVersion
-//        }
-//    }
-//}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_API_KEY")
+    pkg {
+        configurations = ['archives']
+        userOrg = 'pubnative'
+        repo = 'maven'
+        name = project.name
+        version {
+            name = project.version?:"BETA"
+            vcsTag = project.version?:"BETA"
+        }
+    }
+}
