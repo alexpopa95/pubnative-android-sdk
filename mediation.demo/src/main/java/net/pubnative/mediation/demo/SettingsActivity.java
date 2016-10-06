@@ -67,6 +67,7 @@ public class SettingsActivity extends Activity {
     public void onBackPressed() {
 
         Log.v(TAG, "onBackPressed");
+        Settings.setAppToken(this, mAppToken.getText().toString());
         PubnativeConfigManager.clean(this);
         super.onBackPressed();
     }
