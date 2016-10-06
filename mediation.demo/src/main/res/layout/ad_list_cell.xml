@@ -39,12 +39,13 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:background="#6a006e"
-            android:gravity="center" />
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:id="@+id/ad_view_container"
             android:layout_below="@+id/ad_adapter_name_text">
 
@@ -105,15 +106,6 @@
                 android:gravity="center_vertical"
                 android:layout_alignParentBottom="false"
                 android:layout_margin="5dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignBottom="@+id/ad_description_text"
-                android:id="@+id/ad_clickable"></RelativeLayout>
 
         </RelativeLayout>
 

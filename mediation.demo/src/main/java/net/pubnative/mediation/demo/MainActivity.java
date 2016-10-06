@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
         placements.add("facebook_only");
         placements.add("pubnative_only");
         placements.add("yahoo_only");
+        placements.add("admob_only");
         placements.add("waterfall");
         placements.add("imp_day_cap_10");
         placements.add("imp_hour_cap_10");

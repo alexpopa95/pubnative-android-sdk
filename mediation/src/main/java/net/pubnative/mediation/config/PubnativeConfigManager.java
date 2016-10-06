@@ -311,25 +311,24 @@ public class PubnativeConfigManager {
                 for (String placementId : storePlacementIds) {
                     // check if new config contains that placement.
                     PubnativePlacementModel newPlacement = downloadedConfig.placements.get(placementId);
-                    if (newPlacement != null) {
-                        // compare the delivery rule of the new placement with the stored one.
-                        PubnativePlacementModel storedPlacement = storedConfig.placements.get(placementId);
-                        if (storedPlacement != null) {
-                            if (storedPlacement.delivery_rule != null && newPlacement.delivery_rule != null) {
-                                // check if impression cap (hour) changed
-                                if (storedPlacement.delivery_rule.imp_cap_hour != newPlacement.delivery_rule.imp_cap_hour) {
-                                    PubnativeDeliveryManager.resetHourlyImpressionCount(context, placementId);
-                                }
-                                // check if impression cap (day) changed
-                                if (storedPlacement.delivery_rule.imp_cap_day != newPlacement.delivery_rule.imp_cap_day) {
-                                    PubnativeDeliveryManager.resetDailyImpressionCount(context, placementId);
-                                }
-                                // check if pacing cap changed
-                                if (storedPlacement.delivery_rule.pacing_cap_minute != newPlacement.delivery_rule.pacing_cap_minute
-                                    || storedPlacement.delivery_rule.pacing_cap_hour != newPlacement.delivery_rule.pacing_cap_hour) {
-                                    PubnativeDeliveryManager.resetPacingCalendar(placementId);
-                                }
-                            }
+                    PubnativePlacementModel storedPlacement = storedConfig.placements.get(placementId);
+                    if (newPlacement == null) {
+                        PubnativeDeliveryManager.resetHourlyImpressionCount(context, placementId);
+                        PubnativeDeliveryManager.resetDailyImpressionCount(context, placementId);
+                        PubnativeDeliveryManager.resetPacingCalendar(placementId);
+                    } else {
+                        // Check if impression cap (hour) changed
+                        if (storedPlacement.delivery_rule.imp_cap_hour != newPlacement.delivery_rule.imp_cap_hour) {
+                            PubnativeDeliveryManager.resetHourlyImpressionCount(context, placementId);
+                        }
+                        // check if impression cap (day) changed
+                        if (storedPlacement.delivery_rule.imp_cap_day != newPlacement.delivery_rule.imp_cap_day) {
+                            PubnativeDeliveryManager.resetDailyImpressionCount(context, placementId);
+                        }
+                        // check if pacing cap changed
+                        if (storedPlacement.delivery_rule.pacing_cap_minute != newPlacement.delivery_rule.pacing_cap_minute
+                            || storedPlacement.delivery_rule.pacing_cap_hour != newPlacement.delivery_rule.pacing_cap_hour) {
+                            PubnativeDeliveryManager.resetPacingCalendar(placementId);
                         }
                     }
                 }

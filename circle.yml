@@ -1,6 +1,10 @@
 machine:
   timezone: Europe/Berlin
 
+dependencies:
+  pre:
+    - echo y | sudo /usr/local/android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository
+
 test:
   pre:
     - ./gradlew projectInfo

@@ -31,7 +31,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
-import net.pubnative.mediation.R;
+import net.pubnative.mediation.BuildConfig;
 import net.pubnative.mediation.config.model.PubnativePriorityRuleModel;
 import net.pubnative.mediation.utils.PubnativeDeviceUtils;
 
@@ -313,7 +313,7 @@ public class PubnativeInsightDataModel {
             this.retry = 0;
             this.os_version = Build.VERSION.RELEASE;
             this.device_name = Build.MODEL;
-            this.sdk_version = context.getResources().getString(R.string.version);
+            this.sdk_version = BuildConfig.VERSION_NAME;
             // AAID
             String androidAdvertisingId = PubnativeDeviceUtils.getAndroidAdvertisingID(context);
             if (androidAdvertisingId != null) {

@@ -25,19 +25,20 @@ package net.pubnative.mediation.adapter.model;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import net.pubnative.library.request.model.PubnativeAdModel;
 
-public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.model.PubnativeAdModel implements PubnativeAdModel.Listener {
+public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.model.PubnativeAdModel
+        implements PubnativeAdModel.Listener {
 
-    private static String        TAG            = PubnativeLibraryAdModel.class.getSimpleName();
-    protected net.pubnative.library.request.model.PubnativeAdModel mAdModel = null;
+    private static String                                               TAG      = PubnativeLibraryAdModel.class.getSimpleName();
+    protected      net.pubnative.library.request.model.PubnativeAdModel mAdModel = null;
 
     public PubnativeLibraryAdModel(PubnativeAdModel model) {
 
         mAdModel = model;
     }
-
     //==============================================================================================
     // PubnativeAdModel methods
     //==============================================================================================
@@ -112,11 +113,12 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
         Log.v(TAG, "getAdvertisingDisclosureView");
         return null;
     }
+
     // Tracking
     //----------------------------------------------------------------------------------------------
 
     @Override
-    public void startTracking(Context context, View adView) {
+    public void startTracking(Context context, ViewGroup adView) {
 
         Log.v(TAG, "startTracking");
         if (mAdModel != null && context != null && adView != null) {
@@ -132,6 +134,7 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
         mAdModel.stopTracking();
         // Do nothing
     }
+
     //==============================================================================================
     // Callbacks
     //==============================================================================================
@@ -139,18 +142,21 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
     //----------------------------------------------------------------------------------------------
     @Override
     public void onPubnativeAdModelImpression(PubnativeAdModel pubnativeAdModel, View view) {
+
         Log.v(TAG, "onPubnativeAdModelImpression");
         invokeOnAdImpressionConfirmed();
     }
 
     @Override
     public void onPubnativeAdModelClick(PubnativeAdModel pubnativeAdModel, View view) {
+
         Log.v(TAG, "onPubnativeAdModelClick");
         invokeOnAdClick();
     }
 
     @Override
     public void onPubnativeAdModelOpenOffer(PubnativeAdModel pubnativeAdModel) {
+
         Log.v(TAG, "onPubnativeAdModelOpenOffer");
     }
 }

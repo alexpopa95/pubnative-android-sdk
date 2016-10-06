@@ -26,6 +26,7 @@ package net.pubnative.mediation.adapter.model;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
@@ -139,11 +140,12 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
         }
         return result;
     }
+
     // Tracking
     //----------------------------------------------------------------------------------------------
 
     @Override
-    public void startTracking(Context context, View adView) {
+    public void startTracking(Context context, ViewGroup adView) {
 
         Log.v(TAG, "startTracking");
         if (context != null && mNativeAd != null && adView != null) {

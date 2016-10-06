@@ -26,6 +26,7 @@ package net.pubnative.mediation.request.model;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import net.pubnative.mediation.config.PubnativeDeliveryManager;
 import net.pubnative.mediation.config.model.PubnativePlacementModel;
@@ -36,19 +37,25 @@ import java.util.Map;
 
 public abstract class PubnativeAdModel {
 
-    private static final String TAG = PubnativeAdModel.class.getSimpleName();
-
+    private static final String                    TAG                    = PubnativeAdModel.class.getSimpleName();
     // Model
-    protected Context                   mContext               = null;
-    protected Listener                  mListener              = null;
+    protected            Context                   mContext               = null;
+    protected            Listener                  mListener              = null;
     // Tracking
-    protected PubnativeInsightDataModel mTrackingInfoModel     = null;
-    protected String                    mImpressionTrackingURL = null;
-    protected String                    mClickTrackingURL      = null;
-    protected Map<String, String>       mImpressionParameters  = null;
-    protected Map<String, String>       mClickParameters       = null;
-    protected boolean                   mImpressionTracked     = false;
-    protected boolean                   mClickTracked          = false;
+    protected            PubnativeInsightDataModel mTrackingInfoModel     = null;
+    protected            String                    mImpressionTrackingURL = null;
+    protected            String                    mClickTrackingURL      = null;
+    protected            Map<String, String>       mImpressionParameters  = null;
+    protected            Map<String, String>       mClickParameters       = null;
+    protected            boolean                   mImpressionTracked     = false;
+    protected            boolean                   mClickTracked          = false;
+    // View
+    protected            View                      mTitleView             = null;
+    protected            View                      mDescriptionView       = null;
+    protected            View                      mIconView              = null;
+    protected            View                      mBannerView            = null;
+    protected            View                      mRatingView            = null;
+    protected            View                      mCallToActionView      = null;
     //==============================================================================================
     // Listener
     //==============================================================================================
@@ -60,12 +67,14 @@ public abstract class PubnativeAdModel {
 
         /**
          * Callback that will be invoked when the impression is confirmed
+         *
          * @param model model where the impression was confirmed
          */
         void onAdImpressionConfirmed(PubnativeAdModel model);
 
         /**
          * Callback that will be invoked when the ad click was detected
+         *
          * @param model model where the click was confirmed
          */
         void onAdClick(PubnativeAdModel model);
@@ -81,12 +90,12 @@ public abstract class PubnativeAdModel {
         Log.v(TAG, "setListener");
         mListener = listener;
     }
-
     //==============================================================================================
     // ABSTRACT
     //==============================================================================================
     // MODEL FIELDs
     //----------------------------------------------------------------------------------------------
+
     /**
      * gets title of the current ad
      *
@@ -139,6 +148,93 @@ public abstract class PubnativeAdModel {
     public abstract View getAdvertisingDisclosureView(Context context);
 
     //----------------------------------------------------------------------------------------------
+    // VIEW TRACKING
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Sets the title view for tracking
+     *
+     * @param view valid View containing the title
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withTitle(View view) {
+
+        Log.v(TAG, "withTitle");
+        mTitleView = view;
+        return this;
+    }
+
+    /**
+     * Sets the description view for tracking
+     *
+     * @param view valid View containing the description
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withDescription(View view) {
+
+        Log.v(TAG, "withDescription");
+        mDescriptionView = view;
+        return this;
+    }
+
+    /**
+     * Sets the icon view for tracking
+     *
+     * @param view valid View containing the icon
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withIcon(View view) {
+
+        Log.v(TAG, "withIcon");
+        mIconView = view;
+        return this;
+    }
+
+    /**
+     * Sets the banner view for tracking
+     *
+     * @param view valid View containing the banner
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withBanner(View view) {
+
+        Log.v(TAG, "withBanner");
+        mBannerView = view;
+        return this;
+    }
+
+    /**
+     * Sets the rating view for tracking
+     *
+     * @param view valid View containing the rating
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withRating(View view) {
+
+        Log.v(TAG, "withRating");
+        mRatingView = view;
+        return this;
+    }
+
+    /**
+     * Sets the call to action view for tracking
+     *
+     * @param view valid View containing the call to action
+     *
+     * @return this object
+     */
+    public PubnativeAdModel withCallToAction(View view) {
+
+        Log.v(TAG, "withCallToAction");
+        mCallToActionView = view;
+        return this;
+    }
+    //----------------------------------------------------------------------------------------------
     // TRACKING
     //----------------------------------------------------------------------------------------------
 
@@ -148,16 +244,16 @@ public abstract class PubnativeAdModel {
      * @param context context
      * @param adView  view that will handle clicks and will be tracked to confirm impression
      */
-    public abstract void startTracking(Context context, View adView);
+    public abstract void startTracking(Context context, ViewGroup adView);
 
     /**
      * Stop using the view for confirming impression and handle clicks
      */
     public abstract void stopTracking();
-
     //==============================================================================================
     // Tracking data
     //==============================================================================================
+
     /**
      * Sets impression tracking info
      *
