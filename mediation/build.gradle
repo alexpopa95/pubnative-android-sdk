@@ -1,0 +1,131 @@
+apply plugin: 'com.android.library'
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'com.github.dcendents.android-maven'
+
+version = '1.0.0'
+//group = 'net.pubnative'
+
+def sharedVersion = version
+
+android {
+    compileSdkVersion 10
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 21
+        versionCode 25
+        versionName sharedVersion
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'net.pubnative:library:2.0.0'
+
+    // JVM tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.mockito:mockito-core:1.+'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.2'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.2'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
+}
+
+tasks.withType(Test) {
+    testLogging.exceptionFormat = 'full'
+}
+
+//install {
+//    repositories.mavenInstaller {
+//        // This generates POM.xml with proper parameters
+//        pom {
+//            project {
+//                packaging 'aar'
+//
+//                name "pubnative-android-mediation-sdk"
+//                description "Pubnative mediation for Android"
+//                url "http://www.pubnative.net"
+//
+//                // Set your license
+//                licenses {
+//                    license {
+//                        name "MIT"
+//                        url "https://opensource.org/licenses/MIT"
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id "cerberillo"
+//                        name "David Martin"
+//                        email "david@martinmacias.com"
+//                    }
+//                }
+//                scm {
+//                    connection "https://github.com/pubnative/pubnative-android-mediation-sdk.git"
+//                    developerConnection "https://github.com/pubnative/pubnative-android-mediation-sdk.git"
+//                    url "https://github.com/pubnative/pubnative-android-mediation-sdk"
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+//
+//bintray {
+//    user = properties.getProperty('bintray.user')
+//    key = properties.getProperty('bintray.api_key')
+//    configurations = ['archives']
+//    publish=true
+//    pkg {
+//        userOrg = 'pubnative'
+//        repo = 'maven'
+//        name = 'pubnative-android-mediation-sdk'
+//        websiteUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk'
+//        issueTrackerUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk/issues'
+//        vcsUrl = 'https://github.com/pubnative/pubnative-android-mediation-sdk.git'
+//        labels = ['pubnative', 'advertising', 'ad']
+//        licenses = ['MIT']
+//        version {
+//            name=sharedVersion
+//            vcsTag=sharedVersion
+//        }
+//    }
+//}

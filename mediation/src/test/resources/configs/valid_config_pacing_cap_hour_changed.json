@@ -1,0 +1,60 @@
+{
+  "globals": {
+    "refresh": 10,
+    "impression_beacon": "www.google.com",
+    "click_beacon": "www.google.com",
+    "request_beacon" : "www.google.com",
+    "config_beacon" : "www.google.com"
+  },
+  "networks": {
+    "facebook": {
+      "params": {
+        "placement_id": "1431803217037933_1602371133314473"
+      },
+      "adapter": "FacebookNetworkAdapter",
+      "timeout": 10000,
+      "crash_report" : false
+    },
+    "pubnative": {
+      "auth": {
+        "app_token": "af117147db28ef258bfd6d042c718b537bc6a2b0760aca3d073a1c80865545f9"
+      },
+      "adapter": "PubnativeLibraryNetworkAdapter",
+      "timeout": 10000,
+      "crash_report" : false
+    }
+  },
+  "placements": {
+    "1": {
+      "ad_format_code": "native",
+      "priority_rules": [
+        {
+          "priority_rule_id": 1,
+          "network_code": "facebook",
+          "segment_ids" : [
+
+          ],
+          "params": {}
+        },
+        {
+          "priority_rule_id": 2,
+          "network_code": "pubnative",
+          "segment_ids" : [
+
+          ],
+          "params": {}
+        }
+      ],
+      "delivery_rule":{
+        "imp_cap_hour": 0,
+        "imp_cap_day": 0,
+        "pacing_cap_hour": 1,
+        "pacing_cap_minute": 0,
+        "no_ads": false,
+        "segment_ids" : [
+
+        ]
+      }
+    }
+  }
+}

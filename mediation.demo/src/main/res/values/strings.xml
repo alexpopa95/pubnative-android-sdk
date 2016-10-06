@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">mediation.demo</string>
+    <string name="title_activity_setting">SettingActivity</string>
+
+    <string name="app_token">App Token</string>
+    <string name="placement_id">Placement Id</string>
+    <string name="update">Update</string>
+    <string name="action_settings">Settings</string>
+</resources>

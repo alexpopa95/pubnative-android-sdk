@@ -1,0 +1,14 @@
+machine:
+  timezone:
+    Europe/Berlin
+# TODO: Uncomment this to enable master/development compile only
+#general:
+#  branches:
+#    only:
+#      - master
+#      - development
+deployment:
+  development:
+    branch: development
+    commands:
+      - echo TODO-Deploy to QA
