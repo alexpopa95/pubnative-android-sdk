@@ -1,58 +1,27 @@
 {
   "project_info": {
-    "project_number": "1092320510286",
-    "firebase_url": "https://mediation-aebcd.firebaseio.com",
-    "project_id": "mediation-aebcd",
-    "storage_bucket": "mediation-aebcd.appspot.com"
+    "project_number": "27287629051",
+    "firebase_url": "https://mediation-3f9cb.firebaseio.com",
+    "project_id": "mediation-3f9cb",
+    "storage_bucket": "mediation-3f9cb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1092320510286:android:b261c86345270ff9",
-        "android_client_info": {
-          "package_name": "net.pubnative.mediation"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1092320510286-sqj4li3guvjrcas1hgvduaq52funfflc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD_XJ80ot6xcU_WLp2bFVSHotmVxI2qYWY"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1092320510286:android:b529846f3c07e6c6",
+        "mobilesdk_app_id": "1:27287629051:android:b529846f3c07e6c6",
         "android_client_info": {
           "package_name": "net.pubnative.mediation.demo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1092320510286-sqj4li3guvjrcas1hgvduaq52funfflc.apps.googleusercontent.com",
+          "client_id": "27287629051-2pj6f1tfcsf8b20cotfr6md5hv52bqi2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD_XJ80ot6xcU_WLp2bFVSHotmVxI2qYWY"
+          "current_key": "AIzaSyDUlfom31G59NJ6VQoCH_6wmvRHAO3yf2o"
         }
       ],
       "services": {

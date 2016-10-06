@@ -24,6 +24,7 @@
 package net.pubnative.mediation.demo;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.ads.MediaView;
 import com.squareup.picasso.Picasso;
 
 import net.pubnative.mediation.request.PubnativeNetworkRequest;
@@ -42,44 +44,49 @@ import net.pubnative.mediation.request.model.PubnativeAdModel;
 /**
  * A class that holds the reference to all views in a cell.
  * This helps us to avoid redundant calls to "findViewById" each
- * time we load values into the cell.
+ * time we initialize values into the cell.
  */
 public class AdViewHolder implements PubnativeNetworkRequest.Listener,
                                      View.OnClickListener {
 
     private static final String TAG = AdViewHolder.class.getSimpleName();
-    protected Context          mContext;
+    protected     Context               mContext;
     // Data
-    protected CellRequestModel mCellRequestModel;
+    protected     CellRequestModel      mCellRequestModel;
     // Behaviour
-    protected ProgressBar      mAdLoading;
-    protected ViewGroup        mAdViewContainer;
-    protected Button           mRequestButton;
+    protected     ProgressBar           mAdLoading;
+    protected     ViewGroup             mAdViewContainer;
+    protected     Button                mRequestButton;
     // Ad info
-    protected ViewGroup        mAdDisclosure;
-    protected TextView         mPlacementID;
-    protected TextView         mAdapterName;
-    protected TextView         mDescription;
-    protected TextView         mTitle;
-    protected RatingBar        mRating;
-    protected ImageView        mIcon;
-    protected ImageView        mBanner;
+    protected     TextView              mPlacementID;
+    protected     TextView              mAdapterName;
+
+    protected     ViewGroup             mAdDisclosure;
+    protected     TextView              mDescription;
+    protected     TextView              mTitle;
+    protected     RatingBar             mRating;
+    protected     ImageView             mIcon;
+    protected     ImageView             mBanner;
+    protected     MediaView             mMediaView;
 
     public AdViewHolder(Context context, View convertView) {
 
-        this.mContext = context;
+        mContext = context;
         mAdLoading = (ProgressBar) convertView.findViewById(R.id.ad_spinner);
         mAdViewContainer = (ViewGroup) convertView.findViewById(R.id.ad_view_container);
         mRequestButton = (Button) convertView.findViewById(R.id.request_button);
         mRequestButton.setOnClickListener(this);
-        mAdDisclosure = (ViewGroup) convertView.findViewById(R.id.ad_disclosure);
         mAdapterName = (TextView) convertView.findViewById(R.id.ad_adapter_name_text);
+        mPlacementID = (TextView) convertView.findViewById(R.id.placement_id_text);
+        mAdDisclosure = (ViewGroup) convertView.findViewById(R.id.ad_disclosure);
         mTitle = (TextView) convertView.findViewById(R.id.ad_title_text);
         mDescription = (TextView) convertView.findViewById(R.id.ad_description_text);
         mPlacementID = (TextView) convertView.findViewById(R.id.placement_id_text);
         mRating = (RatingBar) convertView.findViewById(R.id.ad_rating);
         mIcon = (ImageView) convertView.findViewById(R.id.ad_icon_image);
         mBanner = (ImageView) convertView.findViewById(R.id.ad_banner_image);
+        mMediaView = (MediaView) convertView.findViewById(R.id.ad_media_view);
+
     }
 
     public void setCellRequestModel(CellRequestModel cellRequestModel) {
@@ -102,6 +109,8 @@ public class AdViewHolder implements PubnativeNetworkRequest.Listener,
         mAdapterName.setText("");
         mRating.setRating(0f);
         mRating.setVisibility(View.GONE);
+        mMediaView.setVisibility(View.GONE);
+        mBanner.setVisibility(View.VISIBLE);
         mBanner.setImageDrawable(null);
         mIcon.setImageDrawable(null);
         mAdLoading.setVisibility(View.GONE);
@@ -122,11 +131,18 @@ public class AdViewHolder implements PubnativeNetworkRequest.Listener,
             mDescription.setText(model.getDescription());
             mRating.setRating(model.getStarRating());
             mRating.setVisibility(View.VISIBLE);
-            Picasso.with(mContext).load(model.getIconUrl()).into(mIcon);
-            Picasso.with(mContext).load(model.getBannerUrl()).into(mBanner);
-            View sponsorView = model.getAdvertisingDisclosureView(this.mContext);
+            mIcon.setImageBitmap(model.getIcon());
+            mBanner.setImageBitmap(model.getBanner());
+            View sponsorView = model.getAdvertisingDisclosureView(mContext);
             if (sponsorView != null) {
                 mAdDisclosure.addView(sponsorView);
+            }
+            MediaView mediaView = (MediaView) model.setNativeAd(mMediaView);
+            if(mediaView != null){
+                mMediaView.setVisibility(View.VISIBLE);
+                mBanner.setVisibility(View.GONE);
+            }else{
+                mBanner.setVisibility(View.VISIBLE);
             }
             // Tracking
             model.withTitle(mTitle)
@@ -151,12 +167,6 @@ public class AdViewHolder implements PubnativeNetworkRequest.Listener,
     //==============================================================================================
     // PubnativeNetworkRequest.Listener
     //----------------------------------------------------------------------------------------------
-    @Override
-    public void onPubnativeNetworkRequestStarted(PubnativeNetworkRequest request) {
-
-        Log.d(TAG, "onPubnativeNetworkRequestStarted");
-    }
-
     @Override
     public void onPubnativeNetworkRequestLoaded(PubnativeNetworkRequest request, PubnativeAdModel ad) {
 

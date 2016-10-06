@@ -23,101 +23,40 @@
 
 package net.pubnative.mediation.adapter.network;
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
+import net.pubnative.mediation.adapter.PubnativeNetworkHub;
 
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.NativeAd;
+public class FacebookNetworkAdapter extends PubnativeNetworkHub {
 
-import net.pubnative.mediation.adapter.PubnativeNetworkAdapter;
-import net.pubnative.mediation.adapter.model.FacebookNativeAdModel;
-
-import java.util.Map;
-
-public class FacebookNetworkAdapter extends PubnativeNetworkAdapter implements AdListener {
-
-    private static         String TAG              = FacebookNetworkAdapter.class.getSimpleName();
-    protected static final String KEY_PLACEMENT_ID = "placement_id";
-    protected NativeAd mNativeAd;
-
-    public FacebookNetworkAdapter(Map data) {
-
-        super(data);
-    }
-
-    //==============================================================================================
-    // PubnativeNetworkAdapter methods
-    //==============================================================================================
     @Override
-    public void request(Context context) {
+    public PubnativeNetworkRequestAdapter getRequestAdapter() {
 
-        Log.v(TAG, "request");
-        if (context != null && mData != null) {
-            String placementId = (String) mData.get(KEY_PLACEMENT_ID);
-            if (!TextUtils.isEmpty(placementId)) {
-                createRequest(context, placementId);
-            } else {
-                invokeFailed(new IllegalArgumentException("FacebookNetworkAdapter - Error: Invalid placement_id provided."));
-            }
-        } else {
-            invokeFailed(new IllegalArgumentException("FacebookNetworkAdapter - Error: No context or adapter data provided."));
-        }
-    }
-
-    //==============================================================================================
-    // FacebookNetworkAdapter methods
-    //==============================================================================================
-    protected void createRequest(Context context, String placementId) {
-
-        Log.v(TAG, "createRequest");
-        mNativeAd = new NativeAd(context, placementId);
-        mNativeAd.setAdListener(this);
-        mNativeAd.loadAd();
-    }
-
-    //==============================================================================================
-    // Callback
-    //==============================================================================================
-    // AdListener
-    //----------------------------------------------------------------------------------------------
-    @Override
-    public void onError(Ad ad, AdError adError) {
-
-        Log.v(TAG, "onError: " + (adError != null ? (adError.getErrorCode() + " - " + adError.getErrorMessage()) : ""));
-        if (ad == mNativeAd) {
-            if (adError != null) {
-                int errorCode = adError.getErrorCode();
-                // 1001 || 1002 || 1203 (No_fill)
-                if (AdError.NO_FILL_ERROR_CODE == errorCode ||
-                    AdError.LOAD_TOO_FREQUENTLY_ERROR_CODE == errorCode ||
-                    1203 == errorCode) {
-                    invokeLoaded(null);
-                } else {
-                    invokeFailed(new Exception("FacebookNetworkAdapter - Error: " + adError.getErrorCode() + " - " + adError.getErrorMessage()));
-                }
-            } else {
-                invokeFailed(new Exception("FacebookNetworkAdapter - Error: Unknown"));
-            }
-        }
+        return new FacebookNetworkRequestAdapter(mNetworkData);
     }
 
     @Override
-    public void onAdLoaded(Ad ad) {
+    public PubnativeNetworkInterstitialAdapter getInterstitialAdapter() {
 
-        Log.v(TAG, "onAdLoaded");
-        if (ad == mNativeAd) {
-            FacebookNativeAdModel wrapModel = new FacebookNativeAdModel((NativeAd) ad);
-            invokeLoaded(wrapModel);
-        }
+        return new FacebookNetworkInterstitialAdapter(mNetworkData);
     }
 
     @Override
-    public void onAdClicked(Ad ad) {
+    public PubnativeNetworkFeedBannerAdapter getFeedBannerAdapter() {
+        return new FacebookNetworkFeedBannerAdapter(mNetworkData);
+    }
 
-        Log.v(TAG, "onAdClicked");
-        // Do nothing
+    @Override
+    public PubnativeNetworkBannerAdapter getBannerAdapter() {
+
+        return new FacebookNetworkBannerAdapter(mNetworkData);
+    }
+
+    @Override
+    public PubnativeNetworkVideoAdapter getVideoAdapter() {
+        return null;
+    }
+
+    @Override
+    public PubnativeNetworkFeedVideoAdapter getFeedVideoAdapter() {
+        return null;
     }
 }

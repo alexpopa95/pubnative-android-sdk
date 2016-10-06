@@ -2,22 +2,85 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".MainActivity">
+                tools:context=".activities.MainActivity">
 
     <Button
         android:id="@+id/button_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:onClick="onSettingsClick"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"/>
+        android:background="#650067"
+        android:onClick="onSettingsClick"
+        android:padding="20dp"
+        android:text="SETTINGS"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
 
-    <ListView
-        android:id="@+id/ad_list"
+    <TextView
+        android:id="@+id/activity_main_separator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/button_settings"/>
+        android:layout_height="40dp"
+        android:layout_below="@+id/button_settings"
+        android:background="#4b4b4b"
+        android:gravity="center"
+        android:text="Formats"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_native_ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_main_separator"
+        android:layout_centerHorizontal="true"
+        android:onClick="onNativeClick"
+        android:text="Native"/>
+
+    <Button
+        android:id="@+id/buttonInterstitial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_native_ad"
+        android:layout_centerHorizontal="true"
+        android:onClick="onInterstitialClick"
+        android:text="Interstitial"/>
+
+    <Button
+        android:id="@+id/buttonBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonInterstitial"
+        android:layout_centerHorizontal="true"
+        android:onClick="onBannerClick"
+        android:text="Banner"/>
+
+    <Button
+        android:id="@+id/buttonFeedBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonBanner"
+        android:layout_centerHorizontal="true"
+        android:onClick="onFeedBannerClick"
+        android:text="FeedBanner"/>
+
+    <Button
+        android:id="@+id/buttonVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonFeedBanner"
+        android:layout_centerHorizontal="true"
+        android:onClick="onVideoClick"
+        android:text="Video"/>
+
+    <Button
+        android:id="@+id/buttonFeedVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonVideo"
+        android:layout_centerHorizontal="true"
+        android:onClick="onFeedVideoClick"
+        android:text="Feed Video"/>
 
 </RelativeLayout>

@@ -23,84 +23,45 @@
 
 package net.pubnative.mediation.adapter.network;
 
-import android.content.Context;
-import android.util.Log;
+import net.pubnative.mediation.adapter.PubnativeNetworkHub;
 
-import net.pubnative.library.request.PubnativeRequest;
-import net.pubnative.library.request.model.PubnativeAdModel;
-import net.pubnative.mediation.adapter.PubnativeNetworkAdapter;
-import net.pubnative.mediation.adapter.model.PubnativeLibraryAdModel;
-
-import java.util.List;
-import java.util.Map;
-
-public class PubnativeLibraryNetworkAdapter extends PubnativeNetworkAdapter implements PubnativeRequest.Listener{
+public class PubnativeLibraryNetworkAdapter extends PubnativeNetworkHub {
 
     private static String TAG = PubnativeLibraryNetworkAdapter.class.getSimpleName();
 
-    public PubnativeLibraryNetworkAdapter(Map data) {
-
-        super(data);
-    }
-
-    //==============================================================================================
-    // PubnativeNetworkAdapter methods
-    //==============================================================================================
     @Override
-    public void request(Context context) {
+    public PubnativeNetworkRequestAdapter getRequestAdapter() {
 
-        Log.v(TAG, "request");
-        if (context != null && mData != null) {
-            createRequest(context);
-        } else {
-            invokeFailed(new IllegalArgumentException("PubnativeLibraryNetworkAdapter - Error: No context or adapter data provided."));
-        }
-    }
-
-    //==============================================================================================
-    // PubnativeLibraryNetworkAdapter methods
-    //==============================================================================================
-    protected void createRequest(Context context) {
-
-        Log.v(TAG, "createRequest");
-        PubnativeRequest request = new PubnativeRequest();
-        Map<String, String> extraMap = getExtras();
-        // We add all extras (hard coded)
-        if (extraMap != null) {
-            for (String key : extraMap.keySet()) {
-                request.setParameter(key, extraMap.get(key));
-            }
-        }
-        // We add all params (network configured)
-        for (Object key : mData.keySet()) {
-            Object value = mData.get(key);
-            request.setParameter((String) key, value.toString());
-        }
-        request.start(context, PubnativeRequest.Endpoint.NATIVE, this);
-    }
-
-    //==============================================================================================
-    // Callbacks
-    //==============================================================================================
-    // PubnativeRequest.Listener
-    //----------------------------------------------------------------------------------------------
-    @Override
-    public void onPubnativeRequestSuccess(PubnativeRequest request, List<PubnativeAdModel> ads) {
-        Log.v(TAG, "onPubnativeRequestSuccess");
-        if (request == null) {
-            invokeFailed(new Exception("PubnativeLibraryNetworkAdapter - Error: invalid request object on response"));
-        } else {
-            net.pubnative.mediation.request.model.PubnativeAdModel wrapAd = null;
-            if (ads != null && ads.size() > 0) {
-                wrapAd = new PubnativeLibraryAdModel(ads.get(0));
-            }
-            invokeLoaded(wrapAd);
-        }
+        return new PubnativeLibraryNetworkRequestAdapter(mNetworkData);
     }
 
     @Override
-    public void onPubnativeRequestFailed(PubnativeRequest request, Exception ex) {
-        Log.v(TAG, "onPubnativeRequestFailed: " + ex);
-        invokeFailed(ex);
+    public PubnativeNetworkInterstitialAdapter getInterstitialAdapter() {
+
+        return new PubnativeLibraryNetworkInterstitialAdapter(mNetworkData);
+    }
+
+    @Override
+    public PubnativeNetworkFeedBannerAdapter getFeedBannerAdapter() {
+
+        return new PubnativeLibraryNetworkFeedBannerAdapter(mNetworkData);
+    }
+
+    @Override
+    public PubnativeNetworkBannerAdapter getBannerAdapter() {
+
+        return new PubnativeLibraryNetworkBannerAdapter(mNetworkData);
+    }
+
+    @Override
+    public PubnativeNetworkVideoAdapter getVideoAdapter() {
+
+        return new PubnativeLibraryNetworkVideoAdapter(mNetworkData);
+    }
+
+    @Override
+    public PubnativeNetworkFeedVideoAdapter getFeedVideoAdapter() {
+
+        return new PubnativeLibraryNetworkFeedVideoAdapter(mNetworkData);
     }
 }

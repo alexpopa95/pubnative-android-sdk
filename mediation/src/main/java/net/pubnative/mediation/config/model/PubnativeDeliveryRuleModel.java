@@ -44,35 +44,36 @@ public class PubnativeDeliveryRuleModel {
     //==============================================================================================
     // PubnativeDeliveryRuleModel
     //==============================================================================================
+
     public boolean isDisabled() {
 
         Log.v(TAG, "isDisabled");
-        return this.no_ads;
+        return no_ads;
     }
 
     public boolean isDayImpressionCapActive() {
 
         Log.v(TAG, "isDayImpressionCapActive");
-        return this.imp_cap_day > 0;
+        return imp_cap_day > 0;
     }
 
     public boolean isHourImpressionCapActive() {
 
         Log.v(TAG, "isHourImpressionCapActive");
-        return this.imp_cap_hour > 0;
+        return imp_cap_hour > 0;
     }
 
     public boolean isPacingCapActive() {
 
         Log.v(TAG, "isPacingCapActive");
-        return this.pacing_cap_hour > 0 || this.pacing_cap_minute > 0;
+        return pacing_cap_hour > 0 || pacing_cap_minute > 0;
     }
 
     public Calendar getPacingOverdueCalendar() {
 
         Log.v(TAG, "getPacingOverdueCalendar");
         Calendar result = null;
-        if (this.isPacingCapActive()) {
+        if (isPacingCapActive()) {
             result = Calendar.getInstance();
             if (pacing_cap_minute > 0) {
                 result.add(Calendar.MINUTE, -pacing_cap_minute);
@@ -87,12 +88,12 @@ public class PubnativeDeliveryRuleModel {
 
         Log.v(TAG, "getPacingOverdueCalendar");
         boolean frequencyCapReached = false;
-        if (this.isDayImpressionCapActive()) {
-            frequencyCapReached = this.imp_cap_day <= PubnativeDeliveryManager.getCurrentDailyCount(
+        if (isDayImpressionCapActive()) {
+            frequencyCapReached = imp_cap_day <= PubnativeDeliveryManager.getCurrentDailyCount(
                     context, placementID);
         }
-        if (!frequencyCapReached && this.isHourImpressionCapActive()) {
-            frequencyCapReached = this.imp_cap_hour <= PubnativeDeliveryManager.getCurrentHourlyCount(
+        if (!frequencyCapReached && isHourImpressionCapActive()) {
+            frequencyCapReached = imp_cap_hour <= PubnativeDeliveryManager.getCurrentHourlyCount(
                     context, placementID);
         }
         return frequencyCapReached;

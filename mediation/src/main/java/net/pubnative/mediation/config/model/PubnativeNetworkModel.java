@@ -31,6 +31,7 @@ public class PubnativeNetworkModel {
     public String              adapter;
     public Boolean             crash_report;
     public Integer             timeout;
+
     //==============================================================================================
     // PubnativeNetworkModel
     //==============================================================================================

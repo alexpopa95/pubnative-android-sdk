@@ -36,9 +36,9 @@ import net.pubnative.mediation.request.model.PubnativeAdModel;
 public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
 
     public static final String TAG = AdMobNativeAppInstallAdModel.class.getSimpleName();
+
     protected NativeAppInstallAdView mNativeAdView;
     protected NativeAppInstallAd     mNativeAd;
-    // Tracking view
     protected ViewGroup              mAdView;
 
     public AdMobNativeAppInstallAdModel(NativeAppInstallAd nativeAd) {
@@ -51,14 +51,17 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     //==============================================================================================
     // Fields
     //----------------------------------------------------------------------------------------------
+
     @Override
     public String getTitle() {
 
         Log.v(TAG, "getTitle");
+
         String result = null;
         if (mNativeAd != null) {
             result = String.valueOf(mNativeAd.getHeadline());
         }
+
         return result;
     }
 
@@ -66,10 +69,12 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     public String getDescription() {
 
         Log.v(TAG, "getDescription");
+
         String result = null;
         if (mNativeAd != null) {
             result = String.valueOf(mNativeAd.getBody());
         }
+
         return result;
     }
 
@@ -77,10 +82,12 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     public String getIconUrl() {
 
         Log.v(TAG, "getIconUrl");
+
         String result = null;
         if (mNativeAd != null && mNativeAd.getIcon() != null) {
             result = mNativeAd.getIcon().getUri().toString();
         }
+
         return result;
     }
 
@@ -88,12 +95,12 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     public String getBannerUrl() {
 
         Log.v(TAG, "getBannerUrl");
+
         String result = null;
-        if (mNativeAd != null
-            && mNativeAd.getImages() != null
-            && mNativeAd.getImages().size() > 0) {
+        if (mNativeAd != null && mNativeAd.getImages() != null && mNativeAd.getImages().size() > 0) {
             result = mNativeAd.getImages().get(0).getUri().toString();
         }
+
         return result;
     }
 
@@ -101,10 +108,12 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     public String getCallToAction() {
 
         Log.v(TAG, "getCallToAction");
+
         String result = null;
         if (mNativeAd != null) {
             result = mNativeAd.getCallToAction().toString();
         }
+
         return result;
     }
 
@@ -112,10 +121,12 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
     public float getStarRating() {
 
         Log.v(TAG, "getStarRating");
+
         float starRating = 0;
         if (mNativeAd != null) {
             starRating = mNativeAd.getStarRating().floatValue();
         }
+
         return starRating;
     }
 
@@ -128,6 +139,7 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
 
     // Tracking
     //----------------------------------------------------------------------------------------------
+
     @Override
     public void startTracking(Context context, ViewGroup adView) {
 
@@ -153,5 +165,10 @@ public class AdMobNativeAppInstallAdModel extends PubnativeAdModel {
         if (mAdView != null) {
             mAdView.removeView(mNativeAdView);
         }
+    }
+
+    @Override
+    public void setLinkCaching(boolean enable) {
+        //Do nothing
     }
 }

@@ -46,6 +46,7 @@ public class PubnativeDeliveryManager {
     //==============================================================================================
     // Singleton
     //----------------------------------------------------------------------------------------------
+
     private PubnativeDeliveryManager() {
 
     }
@@ -59,6 +60,8 @@ public class PubnativeDeliveryManager {
         }
         return sInstance;
     }
+
+    //----------------------------------------------------------------------------------------------
     // Public
     //----------------------------------------------------------------------------------------------
 
@@ -218,8 +221,10 @@ public class PubnativeDeliveryManager {
         return result;
     }
 
+    //----------------------------------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------------------------------
+
     protected static void updateImpressionCount(Context context, String placementID) {
 
         Log.v(TAG, "updateImpressionCount");

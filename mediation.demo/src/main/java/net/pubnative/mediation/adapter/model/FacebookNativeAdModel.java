@@ -33,6 +33,7 @@ import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.ImpressionListener;
+import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 
 import net.pubnative.mediation.request.model.PubnativeAdModel;
@@ -135,12 +136,26 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
         Log.v(TAG, "getAdvertisingDisclosureView");
         View result = null;
         if (context != null && mNativeAd != null) {
-            this.mContext = context;
-            return new AdChoicesView(this.mContext, mNativeAd);
+            mContext = context;
+            return new AdChoicesView(mContext, mNativeAd);
         }
         return result;
     }
 
+    @Override
+    public View setNativeAd(View view) {
+
+        Log.v(TAG, "setNativeAd");
+        View result = null;
+        if (view != null && mNativeAd != null && view instanceof MediaView) {
+            MediaView mediaView = (MediaView) view;
+            mediaView.setNativeAd(mNativeAd);
+            result = mediaView;
+        }
+        return result;
+    }
+
+    //----------------------------------------------------------------------------------------------
     // Tracking
     //----------------------------------------------------------------------------------------------
 
@@ -149,7 +164,7 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
 
         Log.v(TAG, "startTracking");
         if (context != null && mNativeAd != null && adView != null) {
-            this.mContext = context;
+            mContext = context;
             mNativeAd.registerViewForInteraction(adView);
         }
     }
@@ -161,6 +176,11 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
         if (mNativeAd != null) {
             mNativeAd.unregisterView();
         }
+    }
+
+    @Override
+    public void setLinkCaching(boolean enable) {
+        //Do nothing
     }
     //==============================================================================================
     // Callbacks

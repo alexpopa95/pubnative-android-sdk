@@ -23,160 +23,43 @@
 
 package net.pubnative.mediation.adapter.network;
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
+import net.pubnative.mediation.adapter.PubnativeNetworkHub;
 
-import com.flurry.android.FlurryAgent;
-import com.flurry.android.ads.FlurryAdErrorType;
-import com.flurry.android.ads.FlurryAdNative;
-import com.flurry.android.ads.FlurryAdNativeListener;
+public class YahooNetworkAdapter extends PubnativeNetworkHub {
 
-import net.pubnative.mediation.adapter.PubnativeNetworkAdapter;
-import net.pubnative.mediation.adapter.model.FlurryNativeAdModel;
-
-import java.util.Map;
-
-public class YahooNetworkAdapter extends PubnativeNetworkAdapter implements FlurryAdNativeListener {
-
-    private static      String TAG                = YahooNetworkAdapter.class.getSimpleName();
-    public static final String KEY_AD_SPACE_NAME  = "ad_space_name";
-    public static final String KEY_FLURRY_API_KEY = "api_key";
-    private Context mContext;
-
-    public YahooNetworkAdapter(Map data) {
-
-        super(data);
-    }
-
-    //==============================================================================================
-    // PubnativeNetworkAdapter
-    //==============================================================================================
     @Override
-    public void request(Context context) {
+    public PubnativeNetworkRequestAdapter getRequestAdapter() {
 
-        Log.v(TAG, "request");
-        if (context != null && mData != null) {
-            mContext = context;
-            String apiKey = (String) mData.get(KEY_FLURRY_API_KEY);
-            if (!TextUtils.isEmpty(apiKey)) {
-                String adSpaceName = (String) mData.get(KEY_AD_SPACE_NAME);
-                if (!TextUtils.isEmpty(adSpaceName)) {
-                    createRequest(context, adSpaceName, apiKey);
-                } else {
-                    invokeFailed(new IllegalArgumentException("YahooNetworkAdapter - Error: Invalid ad_space_name provided."));
-                }
-            } else {
-                invokeFailed(new IllegalArgumentException("YahooNetworkAdapter - Error: Invalid api_key provided."));
-            }
-        } else {
-            invokeFailed(new IllegalArgumentException("YahooNetworkAdapter - Error: No context or adapter data provided."));
-        }
-    }
-
-    //==============================================================================================
-    // YahooNetworkAdapter
-    //==============================================================================================
-    protected void createRequest(Context context, String adSpaceName, String apiKey) {
-
-        Log.v(TAG, "createRequest");
-        // configure flurry
-        FlurryAgent.setLogEnabled(true);
-        // initialize flurry with new apiKey
-        FlurryAgent.init(context, apiKey);
-        // start/resume session
-        if (!FlurryAgent.isSessionActive()) {
-            FlurryAgent.onStartSession(context);
-        }
-        // Make request
-        FlurryAdNative flurryAdNative = new FlurryAdNative(context, adSpaceName);
-        flurryAdNative.setListener(this);
-        flurryAdNative.fetchAd();
-    }
-    //==============================================================================================
-    // Callbacks
-    //==============================================================================================
-
-    // FlurryAdNativeListener
-    //----------------------------------------------------------------------------------------------
-    protected void endFlurrySession(Context context) {
-
-        Log.v(TAG, "endFlurrySession");
-        FlurryAgent.onEndSession(context);
+        return new YahooNetworkRequestAdapter(mNetworkData);
     }
 
     @Override
-    public void onFetched(FlurryAdNative flurryAdNative) {
+    public PubnativeNetworkInterstitialAdapter getInterstitialAdapter() {
 
-        Log.v(TAG, "onFetched");
-        endFlurrySession(mContext);
-        FlurryNativeAdModel nativeAdModel = new FlurryNativeAdModel(flurryAdNative);
-        invokeLoaded(nativeAdModel);
+        return new YahooNetworkInterstitialAdapter(mNetworkData);
     }
 
     @Override
-    public void onError(FlurryAdNative flurryAdNative, FlurryAdErrorType flurryAdErrorType, int errCode) {
+    public PubnativeNetworkFeedBannerAdapter getFeedBannerAdapter() {
 
-        Log.v(TAG, "onError: " + flurryAdErrorType.name() + " - " + errCode);
-        endFlurrySession(mContext);
-        if (flurryAdErrorType != null) {
-            switch (flurryAdErrorType) {
-                case FETCH: {
-                    invokeLoaded(null);
-                }
-                break;
-                default: {
-                    invokeFailed(new Exception("YahooNetworkAdapter - Error: " + flurryAdErrorType.name() + " - " + errCode));
-                }
-                break;
-            }
-        } else {
-            invokeFailed(new Exception("YahooNetworkAdapter - Error: Unknown"));
-        }
+        return null;
     }
 
     @Override
-    public void onShowFullscreen(FlurryAdNative flurryAdNative) {
+    public PubnativeNetworkBannerAdapter getBannerAdapter() {
 
-        Log.v(TAG, "onShowFullscreen");
-        // Do nothing for now.
+        return new YahooNetworkBannerAdapter(mNetworkData);
     }
 
     @Override
-    public void onCloseFullscreen(FlurryAdNative flurryAdNative) {
+    public PubnativeNetworkVideoAdapter getVideoAdapter() {
 
-        Log.v(TAG, "onCloseFullscreen");
-        // Do nothing for now.
+        return new YahooNetworkVideoAdapter(mNetworkData);
     }
 
     @Override
-    public void onAppExit(FlurryAdNative flurryAdNative) {
+    public PubnativeNetworkFeedVideoAdapter getFeedVideoAdapter() {
 
-        Log.v(TAG, "onAppExit");
-        // Do nothing for now.
-    }
-
-    @Override
-    public void onClicked(FlurryAdNative flurryAdNative) {
-
-        Log.v(TAG, "onClicked");
-        // Do nothing for now.
-    }
-
-    @Override
-    public void onImpressionLogged(FlurryAdNative flurryAdNative) {
-
-        Log.v(TAG, "onImpressionLogged");
-        // Do nothing for now.
-    }
-
-    @Override
-    public void onExpanded(FlurryAdNative flurryAdNative) {
-        Log.v(TAG, "onExpanded");
-    }
-
-    @Override
-    public void onCollapsed(FlurryAdNative flurryAdNative) {
-        Log.v(TAG, "onCollapsed");
+        return new YahooNetworkFeedVideoAdapter(mNetworkData);
     }
 }

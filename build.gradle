@@ -10,7 +10,6 @@ task projectInfo << {
     println " --------------------------"
     println ""
 }
-
 allprojects {
     repositories {
         jcenter()

@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">mediation.demo</string>
     <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_native">Native Ad</string>
+    <string name="title_activity_interstitial">Interstitial Ad</string>
+    <string name="title_activity_feed_banner">Feed Banner</string>
+    <string name="title_activity_feed_video">Feed Video</string>
+    <string name="title_activity_banner">Banner</string>
+    <string name="title_activity_video">Video</string>
 
     <string name="app_token">App Token</string>
     <string name="placement_id">Placement Id</string>
     <string name="update">Update</string>
     <string name="action_settings">Settings</string>
+
 </resources>

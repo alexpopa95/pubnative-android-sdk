@@ -39,12 +39,13 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
 
         mAdModel = model;
     }
+
     //==============================================================================================
     // PubnativeAdModel methods
     //==============================================================================================
-
     // Fields
     //----------------------------------------------------------------------------------------------
+
     @Override
     public String getTitle() {
 
@@ -114,6 +115,7 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
         return null;
     }
 
+    //----------------------------------------------------------------------------------------------
     // Tracking
     //----------------------------------------------------------------------------------------------
 
@@ -135,11 +137,17 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
         // Do nothing
     }
 
+    public void setLinkCaching(boolean enable) {
+
+        mAdModel.setUseCaching(enable);
+    }
+
     //==============================================================================================
     // Callbacks
     //==============================================================================================
     // PubnativeAdModel.Listener
     //----------------------------------------------------------------------------------------------
+
     @Override
     public void onPubnativeAdModelImpression(PubnativeAdModel pubnativeAdModel, View view) {
 

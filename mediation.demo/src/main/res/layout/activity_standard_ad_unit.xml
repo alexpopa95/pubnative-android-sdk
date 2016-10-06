@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1e1e1e">
+
+    <LinearLayout
+        android:id="@+id/container_standard_unit_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_standard_unit_placement"/>
+
+        <Button
+            android:id="@+id/btn_standard_unit_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRequestClick"
+            android:layout_marginTop="10dp"
+            android:text="Request" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_blankContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_standard_unit_btn"/>
+
+    <RelativeLayout
+        android:id="@+id/container_standard_ad_unit_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#77000000"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress_standard_unit_loading"
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
+    </RelativeLayout>
+</RelativeLayout>

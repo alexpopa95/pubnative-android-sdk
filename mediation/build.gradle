@@ -29,11 +29,15 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 10
     buildToolsVersion "23.0.1"
+
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 10
         versionCode System.getenv("CIRCLE_BUILD_NUM")?System.getenv("CIRCLE_BUILD_NUM").toInteger():1
         versionName project.version?:"BETA"
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     buildTypes {
         release {
@@ -41,27 +45,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
-    lintOptions {
-        abortOnError false
-    }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'net.pubnative:library:2.0.4'
+    compile 'net.pubnative:library:2.2.1'
+    compile 'net.pubnative:library.interstitial:2.2.1'
+    compile 'net.pubnative:library.feed.banner:2.2.1'
+    compile 'net.pubnative:library.banner:2.2.1'
+    compile 'net.pubnative:library.video:2.2.1'
+    compile 'net.pubnative:library.feed.video:2.2.1'
+    compile 'net.pubnative:advertising_id_client:1.0.1'
 
     // JVM tests
     testCompile 'junit:junit:4.12'
-    testCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    testCompile 'com.squareup.assertj:assertj-android:1.1.1'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.mockito:mockito-core:1.+'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.2'
-    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.2'
-    testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
 }
 //==================================================================================================
 // COVERALLS
@@ -81,7 +81,7 @@ install {
             project {
                 packaging 'aar'
                 name project.name
-                description "Pubnative API library fro Android"
+                description "Pubnative mediation Android"
                 url "http://www.pubnative.net"
                 licenses {
                     license {
@@ -134,4 +134,22 @@ bintray {
             vcsTag = project.version?:"BETA"
         }
     }
+}
+
+//==================================================================================================
+// JAR
+//==================================================================================================
+if (System.getenv("CIRCLECI")) {
+    task createJar(type: Copy) {
+        from('build/intermediates/bundles/release/')
+        into("${System.getenv("CIRCLE_ARTIFACTS")}/")
+        include('classes.jar')
+        rename('classes.jar', "${project.name}_${version}.jar")
+    }
+
+    task deleteJar(type: Delete) {
+        delete "${System.getenv("CIRCLE_ARTIFACTS")}/${project.name}_${version}.jar"
+    }
+
+    createJar.dependsOn(deleteJar, build)
 }

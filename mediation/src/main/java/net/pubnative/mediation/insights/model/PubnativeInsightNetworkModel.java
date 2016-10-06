@@ -35,6 +35,7 @@ public class PubnativeInsightNetworkModel {
     public List<Integer>              priority_segment_ids;
     public long                       response_time;
     public PubnativeInsightCrashModel crash_report;
+
     //==============================================================================================
     // PubnativeInsightNetworkModel
     //==============================================================================================

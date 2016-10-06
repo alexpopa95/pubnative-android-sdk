@@ -32,13 +32,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import net.pubnative.mediation.exceptions.PubnativeException;
 import net.pubnative.mediation.insights.model.PubnativeInsightDataModel;
 import net.pubnative.mediation.insights.model.PubnativeInsightRequestModel;
 import net.pubnative.mediation.insights.model.PubnativeInsightsAPIResponseModel;
-import net.pubnative.mediation.task.PubnativeHttpTask;
+import net.pubnative.mediation.network.PubnativeHttpRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +50,8 @@ public class PubnativeInsightsManager {
     protected static final String  INSIGHTS_PREFERENCES_KEY = "net.pubnative.mediation.tracking.PubnativeInsightsManager";
     protected static final String  INSIGHTS_PENDING_DATA    = "pending_data";
     protected static final String  INSIGHTS_FAILED_DATA     = "failed_data";
-    protected static final String  PARAMETER_APP_TOKEN_KEY  = "app_token";
     protected static       boolean sIdle                    = true;
+
     //==============================================================================================
     // PubnativeInsightsManager
     //==============================================================================================
@@ -59,10 +61,10 @@ public class PubnativeInsightsManager {
      *
      * @param context   valid Context object
      * @param baseURL   the base URL of the tracking server
-     * @param parameters added parameters that will be included as querystring parameters
+     * @param extras    added parameters that will be included as querystring parameters
      * @param dataModel PubnativeInsightDataModel object with values filled in.
      */
-    public synchronized static void trackData(Context context, String baseURL, Map<String, String> parameters, PubnativeInsightDataModel dataModel) {
+    public synchronized static void trackData(Context context, String baseURL, Map<String, String> extras, PubnativeInsightDataModel dataModel) {
 
         Log.v(TAG, "trackData");
         if (context == null) {
@@ -74,11 +76,12 @@ public class PubnativeInsightsManager {
         } else {
             Uri.Builder uriBuilder = Uri.parse(baseURL).buildUpon();
             // Fill with passed parameters
-            if (parameters != null) {
-                for (String key : parameters.keySet()) {
-                    uriBuilder.appendQueryParameter(key, parameters.get(key));
+            if (extras != null && extras.size() > 0) {
+                for (String key : extras.keySet()) {
+                    uriBuilder.appendQueryParameter(key, extras.get(key));
                 }
             }
+            dataModel.generated_at = System.currentTimeMillis()*1000;
             PubnativeInsightRequestModel model = new PubnativeInsightRequestModel(uriBuilder.build().toString(), dataModel);
             // Enqueue failed
             List<PubnativeInsightRequestModel> failedList = getTrackingList(context, INSIGHTS_FAILED_DATA);
@@ -94,6 +97,7 @@ public class PubnativeInsightsManager {
     //==============================================================================================
     // WORKFLOW
     //==============================================================================================
+
     protected synchronized static void trackNext(final Context context) {
 
         Log.v(TAG, "trackNext");
@@ -106,15 +110,20 @@ public class PubnativeInsightsManager {
                 Log.w(TAG, "trackNext - Dequeued item is null. Dropping call");
                 sIdle = true;
             } else {
-
                 String trackingDataString = new Gson().toJson(model.dataModel);
                 if (!TextUtils.isEmpty(model.url) && !TextUtils.isEmpty(trackingDataString)) {
-                    PubnativeHttpTask.Listener listener = new PubnativeHttpTask.Listener() {
+                    PubnativeHttpRequest.Listener listener = new PubnativeHttpRequest.Listener() {
 
                         @Override
-                        public void onHttpTaskSuccess(PubnativeHttpTask task, String result) {
+                        public void onPubnativeHttpRequestStart(PubnativeHttpRequest request) {
 
-                            Log.v(TAG, "onHttpTaskSuccess");
+                            Log.v(TAG, "onPubnativeHttpRequestStart");
+                        }
+
+                        @Override
+                        public void onPubnativeHttpRequestFinish(PubnativeHttpRequest request, String result) {
+
+                            Log.v(TAG, "onPubnativeHttpRequestFinish");
                             if (TextUtils.isEmpty(result)) {
                                 trackingFailed(context, model, "invalid insight response (empty or null)");
                             } else {
@@ -126,16 +135,19 @@ public class PubnativeInsightsManager {
                                         trackingFailed(context, model, response.error_message);
                                     }
                                 } catch (Exception e) {
-                                    trackingFailed(context, model, e.toString());
+                                    Map errorData = new HashMap();
+                                    errorData.put("parsingException", e.toString());
+                                    errorData.put("serverResponse", result);
+                                    trackingFailed(context, model, PubnativeException.extraException(PubnativeException.NETWORK_INVALID_RESPONSE, errorData).toString());
                                 }
                             }
                         }
 
                         @Override
-                        public void onHttpTaskFailed(PubnativeHttpTask task, String errorMessage) {
+                        public void onPubnativeHttpRequestFail(PubnativeHttpRequest request, Exception exception) {
 
-                            Log.v(TAG, "onHttpTaskFailed: " + errorMessage);
-                            trackingFailed(context, model, errorMessage);
+                            Log.v(TAG, "onPubnativeHttpRequestFail: " + exception);
+                            trackingFailed(context, model, exception.toString());
                         }
                     };
                     sendTrackingDataToServer(context, trackingDataString, model.url, listener);
@@ -154,6 +166,7 @@ public class PubnativeInsightsManager {
         Log.v(TAG, "trackingFailed");
         // Add a retry
         model.dataModel.retry = model.dataModel.retry + 1;
+        model.dataModel.retry_error = message;
         enqueueInsightItem(context, INSIGHTS_FAILED_DATA, model);
         sIdle = true;
         trackNext(context);
@@ -166,18 +179,18 @@ public class PubnativeInsightsManager {
         trackNext(context);
     }
 
-    protected static void sendTrackingDataToServer(Context context, String trackingDataString, String url, PubnativeHttpTask.Listener listener) {
+    protected static void sendTrackingDataToServer(Context context, String trackingDataString, String url, PubnativeHttpRequest.Listener listener) {
 
         Log.v(TAG, "sendTrackingDataToServer");
-        PubnativeHttpTask http = new PubnativeHttpTask(context);
-        http.setPOSTData(trackingDataString);
-        http.setListener(listener);
-        http.execute(url);
+        PubnativeHttpRequest http = new PubnativeHttpRequest();
+        http.setPOSTString(trackingDataString);
+        http.start(context, url, listener);
     }
 
     //==============================================================================================
     // QUEUE
     //==============================================================================================
+
     protected static void enqueueInsightItem(Context context, String listKey, PubnativeInsightRequestModel model) {
 
         Log.v(TAG, "enqueueInsightItem");
@@ -224,6 +237,7 @@ public class PubnativeInsightsManager {
     //==============================================================================================
     // TRACKING LIST
     //----------------------------------------------------------------------------------------------
+
     protected static List<PubnativeInsightRequestModel> getTrackingList(Context context, String listKey) {
 
         Log.v(TAG, "getTrackingList");
@@ -266,8 +280,10 @@ public class PubnativeInsightsManager {
         }
     }
 
+    //----------------------------------------------------------------------------------------------
     // Shared preferences base item
     //----------------------------------------------------------------------------------------------
+
     protected static SharedPreferences.Editor getSharedPreferencesEditor(Context context) {
 
         Log.v(TAG, "getSharedPreferencesEditor");

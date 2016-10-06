@@ -24,12 +24,14 @@
 package net.pubnative.mediation.insights.model;
 
 import net.pubnative.mediation.BuildConfig;
+import net.pubnative.mediation.request.model.PubnativeAdTargetingModel;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -37,16 +39,13 @@ import static org.mockito.Mockito.spy;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class,
         sdk = 21)
-@PrepareForTest(PubnativeInsightDataModel.class)
 public class PubnativeInsightDataModelTest {
-
-    private final String validString = "sampleText";
 
     @Test
     public void resetClearsLists() {
         PubnativeInsightDataModel dataModelSpy = spy(PubnativeInsightDataModel.class);
-        dataModelSpy.network = validString;
-        dataModelSpy.addAttemptedNetwork(validString);
+        dataModelSpy.network = "sampleText";
+        dataModelSpy.addAttemptedNetwork("sampleText");
         // lists are not null.
         assertThat(dataModelSpy.network).isNotNull();
         assertThat(dataModelSpy.attempted_networks).isNotNull();
@@ -64,7 +63,9 @@ public class PubnativeInsightDataModelTest {
         assertThat(dataModelSpy.interests).isNull();
 
         // valid string
-        dataModelSpy.addInterest(validString);
+        PubnativeAdTargetingModel targeting = new PubnativeAdTargetingModel();
+        targeting.addInterest("sampleText");
+        dataModelSpy.setTargetting(targeting);
         assertThat(dataModelSpy.interests).isNotNull();
         assertThat(dataModelSpy.interests.size()).isNotZero();
 
@@ -72,35 +73,86 @@ public class PubnativeInsightDataModelTest {
         dataModelSpy.interests = null;
 
         // interest as empty string
-        dataModelSpy.addInterest("");
+        PubnativeAdTargetingModel emptyInterest = new PubnativeAdTargetingModel();
+        emptyInterest.addInterest("");
+        dataModelSpy.setTargetting(emptyInterest);
         assertThat(dataModelSpy.interests).isNull();
 
         // interest as null
-        dataModelSpy.addInterest(null);
+        PubnativeAdTargetingModel nullInterest = new PubnativeAdTargetingModel();
+        nullInterest.addInterest(null);
+        dataModelSpy.setTargetting(nullInterest);
         assertThat(dataModelSpy.interests).isNull();
     }
 
     @Test
-    public void addAttemptedNetworkWithDifferentValues() {
+    public void addUnreachableNetwork_withValidValue_isNotNull() {
         PubnativeInsightDataModel dataModelSpy = spy(PubnativeInsightDataModel.class);
 
-        // the list is null at the beginning
-        assertThat(dataModelSpy.attempted_networks).isNull();
-
         // valid string
-        dataModelSpy.addAttemptedNetwork(validString);
-        assertThat(dataModelSpy.attempted_networks).isNotNull();
-        assertThat(dataModelSpy.attempted_networks.size()).isNotZero();
+        dataModelSpy.addUnreachableNetwork("sampleText");
+        assertThat(dataModelSpy.unreachable_networks).isNotNull();
+        assertThat(dataModelSpy.unreachable_networks.size()).isNotZero();
 
-        // resets attempted_networks
-        dataModelSpy.reset();
+    }
+
+    @Test
+    public void addUnreachableNetwork_withEmptyValue_isNull() {
+        PubnativeInsightDataModel dataModelSpy = spy(PubnativeInsightDataModel.class);
 
         // network as empty string
-        dataModelSpy.addAttemptedNetwork("");
-        assertThat(dataModelSpy.attempted_networks).isNull();
+        dataModelSpy.addUnreachableNetwork("");
+        assertThat(dataModelSpy.unreachable_networks).isNull();
+    }
+
+    @Test
+    public void addUnreachableNetwork_withNullValue_isNull() {
+        PubnativeInsightDataModel dataModelSpy = spy(PubnativeInsightDataModel.class);
 
         // network as null
-        dataModelSpy.addAttemptedNetwork(null);
-        assertThat(dataModelSpy.attempted_networks).isNull();
+        dataModelSpy.addUnreachableNetwork(null);
+        assertThat(dataModelSpy.unreachable_networks).isNull();
+    }
+
+    @Test
+    public void addAttemptedNetwork_withValidString_createsArray() {
+
+        PubnativeInsightDataModel model = spy(PubnativeInsightDataModel.class);
+        model.addAttemptedNetwork("valid string");
+        assertThat(model.attempted_networks).isNotNull();
+    }
+
+    @Test
+    public void addAttemptedNetwork_withValidString_addsItem() {
+
+        PubnativeInsightDataModel model = spy(PubnativeInsightDataModel.class);
+        String validString = "valid string";
+        model.addAttemptedNetwork(validString);
+        assertThat(model.attempted_networks.size()).isNotZero();
+        assertThat(model.attempted_networks.get(0)).isEqualTo(validString);
+    }
+
+    @Test
+    public void addAttemptedNetwork_withEmptyString_doesNothing() {
+
+        PubnativeInsightDataModel model = spy(PubnativeInsightDataModel.class);
+        model.addAttemptedNetwork("");
+        assertThat(model.attempted_networks).isNull();
+    }
+
+    @Test
+    public void addAttemptedNetwork_withNullString_doesNothing() {
+
+        PubnativeInsightDataModel model = spy(PubnativeInsightDataModel.class);
+        model.addAttemptedNetwork(null);
+        assertThat(model.attempted_networks).isNull();
+    }
+
+    @Test
+    public void reset_shouldNullifyAttemptedNetworks() {
+        PubnativeInsightDataModel model = spy(PubnativeInsightDataModel.class);
+        model.attempted_networks = Arrays.asList("attempted_network");
+        model.reset();
+        assertThat(model.attempted_networks).isNull();
     }
 }

@@ -45,11 +45,11 @@ public class AdListAdapter extends ArrayAdapter<CellRequestModel> {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
         Log.v(TAG, "getView");
-        CellRequestModel requestModel = this.getItem(position);
+        CellRequestModel requestModel = getItem(position);
         AdViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.ad_list_cell, viewGroup, false);
-            viewHolder = new AdViewHolder(this.getContext(), convertView);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.ad_list_cell, viewGroup, false);
+            viewHolder = new AdViewHolder(getContext(), convertView);
             convertView.setTag(viewHolder);
         }
         viewHolder = (AdViewHolder) convertView.getTag();
