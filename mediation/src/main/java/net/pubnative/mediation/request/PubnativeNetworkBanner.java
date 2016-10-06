@@ -206,7 +206,6 @@ public class PubnativeNetworkBanner extends PubnativeNetworkWaterfall
                 if (mListener != null) {
                     mListener.onPubnativeNetworkBannerLoadFinish(PubnativeNetworkBanner.this);
                 }
-                mListener = null;
             }
         });
     }
