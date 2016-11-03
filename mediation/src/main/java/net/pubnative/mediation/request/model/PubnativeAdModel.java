@@ -183,7 +183,7 @@ public abstract class PubnativeAdModel {
     }
 
     /**
-     * set native ad that may contain video & rich media (facebook network only)
+     * set native ad that may contain video and rich media (facebook network only)
      *
      * @param view view
      *

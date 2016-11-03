@@ -183,20 +183,20 @@ public class PubnativeInsightDataModel {
     public void addNetwork(PubnativePriorityRuleModel priorityRuleModel, long responseTime, PubnativeInsightCrashModel crashModel) {
 
         Log.v(TAG, "addNetwork");
+        if (networks == null) {
+            networks = new ArrayList<PubnativeInsightNetworkModel>();
+        }
+        PubnativeInsightNetworkModel networkModel = new PubnativeInsightNetworkModel();
         if (priorityRuleModel != null) {
-            if (networks == null) {
-                networks = new ArrayList<PubnativeInsightNetworkModel>();
-            }
-            PubnativeInsightNetworkModel networkModel = new PubnativeInsightNetworkModel();
             networkModel.code = priorityRuleModel.network_code;
             networkModel.priority_rule_id = priorityRuleModel.id;
             networkModel.priority_segment_ids = priorityRuleModel.segment_ids;
-            networkModel.response_time = responseTime;
-            if (crashModel != null) {
-                networkModel.crash_report = crashModel;
-            }
-            networks.add(networkModel);
         }
+        networkModel.response_time = responseTime;
+        if (crashModel != null) {
+            networkModel.crash_report = crashModel;
+        }
+        networks.add(networkModel);
     }
 
     /**

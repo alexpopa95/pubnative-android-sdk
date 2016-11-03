@@ -21,10 +21,17 @@ deployment:
     commands:
       # Publish to Fabric
       - ./gradlew assembleDebug crashlyticsUploadDistributionDebug
+  beta:
+      branch: beta
+      commands:
+        # Publish to FABRIC
+        - ./gradlew assembleDebug crashlyticsUploadDistributionDebug
+        # Publish to BINTRAY
+        - if [ ! -z $IS_BETA ] ; then ./gradlew bintrayUpload ; fi
   production:
     branch: master
     commands:
       # Publish to FABRIC
       - ./gradlew assembleDebug crashlyticsUploadDistributionDebug
       # Publish to BINTRAY
-      - ./gradlew bintrayUpload
+      - if [ -z $IS_BETA ] ; then ./gradlew bintrayUpload ; fi

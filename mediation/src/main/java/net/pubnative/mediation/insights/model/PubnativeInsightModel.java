@@ -169,7 +169,9 @@ public class PubnativeInsightModel {
         PubnativeInsightCrashModel crashModel = new PubnativeInsightCrashModel();
         crashModel.error = exception.getMessage();
         crashModel.details = exception.toString();
-        mData.addUnreachableNetwork(priorityRuleModel.network_code);
+        if (priorityRuleModel != null && !TextUtils.isEmpty(priorityRuleModel.network_code)) {
+            mData.addUnreachableNetwork(priorityRuleModel.network_code);
+        }
         mData.addNetwork(priorityRuleModel, responseTime, crashModel);
     }
 
@@ -185,7 +187,9 @@ public class PubnativeInsightModel {
         PubnativeInsightCrashModel crashModel = new PubnativeInsightCrashModel();
         crashModel.error = exception.getMessage();
         crashModel.details = exception.toString();
-        mData.addAttemptedNetwork(priorityRuleModel.network_code);
+        if (priorityRuleModel != null && !TextUtils.isEmpty(priorityRuleModel.network_code)) {
+            mData.addAttemptedNetwork(priorityRuleModel.network_code);
+        }
         mData.addNetwork(priorityRuleModel, responseTime, crashModel);
     }
 
@@ -197,7 +201,9 @@ public class PubnativeInsightModel {
     public void trackSuccededNetwork(PubnativePriorityRuleModel priorityRuleModel, long responseTime) {
 
         Log.v(TAG, "trackSuccededNetwork");
-        mData.network = priorityRuleModel.network_code;
+        if (priorityRuleModel != null && !TextUtils.isEmpty(priorityRuleModel.network_code)) {
+            mData.network = priorityRuleModel.network_code;
+        }
         mData.addNetwork(priorityRuleModel, responseTime, null);
         PubnativeDeliveryManager.updatePacingCalendar(mData.placement_name);
     }
