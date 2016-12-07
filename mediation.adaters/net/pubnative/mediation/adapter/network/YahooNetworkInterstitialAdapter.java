@@ -83,7 +83,9 @@ public class YahooNetworkInterstitialAdapter extends PubnativeNetworkInterstitia
         FlurryAdTargeting result = null;
         if (mTargeting != null) {
             result = new FlurryAdTargeting();
-            result.setAge(mTargeting.age);
+            if(mTargeting.age != null) {
+                result.setAge(mTargeting.age);
+            }
             if (mTargeting.gender == null) {
                 result.setGender(FlurryGender.UNKNOWN);
             } else if (mTargeting.gender.equals("female")) {

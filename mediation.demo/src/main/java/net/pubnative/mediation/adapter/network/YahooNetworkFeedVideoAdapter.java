@@ -108,7 +108,9 @@ public class YahooNetworkFeedVideoAdapter extends PubnativeNetworkFeedVideoAdapt
         FlurryAdTargeting result = null;
         if (mTargeting != null) {
             result = new FlurryAdTargeting();
-            result.setAge(mTargeting.age);
+            if(mTargeting.age != null) {
+                result.setAge(mTargeting.age);
+            }
 
             if (mTargeting.gender == null) {
                 result.setGender(FlurryGender.UNKNOWN);
