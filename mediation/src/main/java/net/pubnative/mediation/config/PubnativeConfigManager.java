@@ -138,10 +138,13 @@ public class PubnativeConfigManager {
     protected static void doNextConfigRequest() {
 
         Log.v(TAG, "doNextConfigRequest");
-        PubnativeConfigRequestModel item = dequeueRequest();
-        if (sIdle && item != null) {
-            sIdle = false;
-            getNextConfig(item);
+
+        if (sIdle) {
+            PubnativeConfigRequestModel item = dequeueRequest();
+            if(item != null) {
+                sIdle = false;
+                getNextConfig(item);
+            }
         }
     }
 
