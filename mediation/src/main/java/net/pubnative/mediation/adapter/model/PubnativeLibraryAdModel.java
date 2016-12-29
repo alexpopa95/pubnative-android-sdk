@@ -143,7 +143,7 @@ public class PubnativeLibraryAdModel extends net.pubnative.mediation.request.mod
 
     public void setLinkCaching(boolean enable) {
 
-        mAdModel.setUseCaching(enable);
+        mAdModel.setUseClickCaching(enable);
     }
 
     //==============================================================================================

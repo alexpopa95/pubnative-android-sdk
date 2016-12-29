@@ -52,7 +52,7 @@ public class PubnativeConfigManager {
     protected static final String                            APP_TOKEN_STRING_KEY      = "appToken";
     protected static final String                            TIMESTAMP_LONG_KEY        = "config.timestamp";
     protected static final String                            REFRESH_LONG_KEY          = "refresh";
-    protected static final String                            CONFIG_DOWNLOAD_BASE_URL  = "http://ml.pubnative.net/ml/v1/config";
+    protected static final String                            CONFIG_DOWNLOAD_BASE_URL  = "https://ml.pubnative.net/ml/v1/config";
     protected static final String                            APP_TOKEN_KEY             = "app_token";
     protected static       List<PubnativeConfigRequestModel> sQueue                    = null;
     protected static       boolean                           sIdle                     = true;
