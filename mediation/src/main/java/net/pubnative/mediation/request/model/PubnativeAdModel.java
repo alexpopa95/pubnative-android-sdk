@@ -25,33 +25,38 @@ package net.pubnative.mediation.request.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.pubnative.library.utils.ImageDownloader;
 import net.pubnative.mediation.config.model.PubnativePlacementModel;
 import net.pubnative.mediation.insights.model.PubnativeInsightModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class PubnativeAdModel {
 
-    private static final String                TAG                = PubnativeAdModel.class.getSimpleName();
+    private static final String                TAG                       = PubnativeAdModel.class.getSimpleName();
     // Model
-    protected            Context               mContext           = null;
-    protected            Listener              mListener          = null;
+    protected            Context               mContext                  = null;
+    protected            Listener              mListener                 = null;
     // Tracking
-    protected            PubnativeInsightModel mInsightModel      = null;
-    protected            boolean               mImpressionTracked = false;
-    protected            boolean               mClickTracked      = false;
+    protected            PubnativeInsightModel mInsightModel             = null;
+    protected            boolean               mImpressionTracked        = false;
+    protected            boolean               mClickTracked             = false;
     // View
-    protected            View                  mTitleView         = null;
-    protected            View                  mDescriptionView   = null;
-    protected            View                  mIconView          = null;
-    protected            View                  mBannerView        = null;
-    protected            View                  mRatingView        = null;
-    protected            View                  mCallToActionView  = null;
-    //Bitmap
-    protected            Bitmap                mIcon              = null;
-    protected            Bitmap                mBanner            = null;
+    protected            View                  mTitleView                = null;
+    protected            View                  mDescriptionView          = null;
+    protected            View                  mIconView                 = null;
+    protected            View                  mBannerView               = null;
+    protected            View                  mRatingView               = null;
+    protected            View                  mCallToActionView         = null;
+    // Cached assets
+    protected            Map<String, Bitmap>   mCachedAssets             = null;
+    protected            int                   mRemainingCacheableAssets = 0;
 
     //==============================================================================================
     // Listener
@@ -78,6 +83,16 @@ public abstract class PubnativeAdModel {
     }
 
     /**
+     * Listener with callback for assets
+     */
+    public interface FetchListener {
+        /**
+         * Callback that will be invoked when all the assets caching completed
+         */
+        void onFetchFinished();
+    }
+
+    /**
      * Sets the a listener for tracking callbacks
      *
      * @param listener valid Listener
@@ -87,6 +102,88 @@ public abstract class PubnativeAdModel {
         Log.v(TAG, "setListener");
         mListener = listener;
     }
+
+    /**
+     * Fetch all required things
+     *
+     * @param listener Valid FetchListener
+     */
+    public void fetch(FetchListener listener) {
+
+        Log.v(TAG, "fetch");
+        fetchAssets(listener);
+    }
+
+    //==============================================================================================
+    // Private methods
+    //==============================================================================================
+    protected void fetchAssets(FetchListener listener) {
+
+        Log.v(TAG, "fetchAssets");
+        if (listener == null) {
+            Log.w(TAG, "Listener is not set");
+        }
+        // This needs to be updated whenever we are going to cache more resources.
+        mRemainingCacheableAssets = 2;
+        cacheAsset(getIconUrl(), listener); // cache icon
+        cacheAsset(getBannerUrl(), listener); // cache banner
+    }
+
+    protected void cacheAsset(final String url, final FetchListener listener) {
+
+        Log.v(TAG, "cacheAsset");
+        if (TextUtils.isEmpty(url)) {
+            checkCachedAssets(listener);
+        } else {
+            new ImageDownloader().load(url, new ImageDownloader.Listener() {
+                @Override
+                public void onImageLoad(String url, Bitmap bitmap) {
+                    addCachedAsset(url, bitmap);
+                    checkCachedAssets(listener);
+                }
+
+                @Override
+                public void onImageFailed(String url, Exception exception) {
+                    Log.e(TAG, "Asset download error: " + url, exception);
+                    checkCachedAssets(listener);
+                }
+            });
+        }
+    }
+
+    protected void addCachedAsset(String url, Bitmap asset) {
+
+        Log.v(TAG, "addCachedAsset");
+        if (mCachedAssets == null) {
+            mCachedAssets = new HashMap<String, Bitmap>();
+        }
+
+        if (!TextUtils.isEmpty(url) && asset != null) {
+            mCachedAssets.put(url, asset);
+        }
+    }
+
+    protected void checkCachedAssets(FetchListener listener) {
+
+        Log.v(TAG, "checkCachedAssets");
+        mRemainingCacheableAssets--;
+        if (mRemainingCacheableAssets == 0) {
+            if (listener != null) {
+                listener.onFetchFinished();
+            }
+        }
+    }
+
+    protected Bitmap getAsset(String url) {
+
+        Log.v(TAG, "getAsset");
+        Bitmap result = null;
+        if (mCachedAssets != null) {
+            result = mCachedAssets.get(url);
+        }
+        return result;
+    }
+
     //==============================================================================================
     // ABSTRACT
     //==============================================================================================
@@ -127,7 +224,7 @@ public abstract class PubnativeAdModel {
      * @return icon bitmap image.
      */
     public Bitmap getIcon(){
-        return mIcon;
+        return getAsset(getIconUrl());
     }
 
     /**
@@ -136,7 +233,7 @@ public abstract class PubnativeAdModel {
      * @return banner bitmap image.
      */
     public Bitmap getBanner(){
-        return mBanner;
+        return getAsset(getBannerUrl());
     }
 
     /**
@@ -157,41 +254,19 @@ public abstract class PubnativeAdModel {
      * gets the advertising disclosure item for the current network (Ad choices, Sponsor label, etc)
      *
      * @param context context
-     *
      * @return Disclosure view to be added on top of the ad.
      */
     public abstract View getAdvertisingDisclosureView(Context context);
 
     /**
-     * sets bitmap resource for ad request icon.
-     *
-     * @param icon valid bitmap.
-     */
-    public void setIcon(Bitmap icon){
-
-        mIcon = icon;
-    }
-
-    /**
-     * sets bitmap resource for ad request banner.
-     *
-     * @param banner valid bitmap.
-     */
-    public void setBanner(Bitmap banner){
-
-        mBanner = banner;
-    }
-
-    /**
      * set native ad that may contain video and rich media (facebook network only)
      *
      * @param view view
-     *
      * @return View view that will have rich media including video.
      */
-    public View setNativeAd(View view){
+    public View setNativeAd(View view) {
         return null;
-    };
+    }
 
     //----------------------------------------------------------------------------------------------
     // VIEW TRACKING
@@ -201,7 +276,6 @@ public abstract class PubnativeAdModel {
      * Sets the title view for tracking
      *
      * @param view valid View containing the title
-     *
      * @return this object
      */
     public PubnativeAdModel withTitle(View view) {
@@ -215,7 +289,6 @@ public abstract class PubnativeAdModel {
      * Sets the description view for tracking
      *
      * @param view valid View containing the description
-     *
      * @return this object
      */
     public PubnativeAdModel withDescription(View view) {
@@ -229,7 +302,6 @@ public abstract class PubnativeAdModel {
      * Sets the icon view for tracking
      *
      * @param view valid View containing the icon
-     *
      * @return this object
      */
     public PubnativeAdModel withIcon(View view) {
@@ -243,7 +315,6 @@ public abstract class PubnativeAdModel {
      * Sets the banner view for tracking
      *
      * @param view valid View containing the banner
-     *
      * @return this object
      */
     public PubnativeAdModel withBanner(View view) {
@@ -257,7 +328,6 @@ public abstract class PubnativeAdModel {
      * Sets the rating view for tracking
      *
      * @param view valid View containing the rating
-     *
      * @return this object
      */
     public PubnativeAdModel withRating(View view) {
@@ -271,7 +341,6 @@ public abstract class PubnativeAdModel {
      * Sets the call to action view for tracking
      *
      * @param view valid View containing the call to action
-     *
      * @return this object
      */
     public PubnativeAdModel withCallToAction(View view) {
