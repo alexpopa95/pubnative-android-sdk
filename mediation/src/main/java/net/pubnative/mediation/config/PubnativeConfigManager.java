@@ -265,7 +265,7 @@ public class PubnativeConfigManager {
         Long refresh = getStoredRefresh(request.context);
         Long storedTimestamp = getStoredTimestamp(request.context);
         Long currentTimestamp = System.currentTimeMillis();
-        if (TextUtils.isEmpty(storedConfigString)) {
+        if (TextUtils.isEmpty(storedConfigString) || TextUtils.isEmpty(storedAppToken)) {
             // There is no stored config
             result = true;
         } else if (!storedAppToken.equals(request.appToken)) {
