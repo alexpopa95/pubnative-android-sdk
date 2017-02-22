@@ -49,12 +49,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'net.pubnative:library:2.3.9'
-    compile 'net.pubnative:library.interstitial:2.3.9'
-    compile 'net.pubnative:library.feed.banner:2.3.9'
-    compile 'net.pubnative:library.banner:2.3.9'
-    compile 'net.pubnative:library.video:2.3.9'
-    compile 'net.pubnative:library.feed.video:2.3.9'
+    compile 'net.pubnative:library:2.3.11'
+    compile 'net.pubnative:library.interstitial:2.3.11'
+    compile 'net.pubnative:library.feed.banner:2.3.11'
+    compile 'net.pubnative:library.banner:2.3.11'
+    compile 'net.pubnative:library.video:2.3.11'
+    compile 'net.pubnative:library.feed.video:2.3.11'
     compile 'net.pubnative:advertising_id_client:1.0.1'
 
     // JVM tests

@@ -37,9 +37,9 @@ import net.pubnative.mediation.insights.model.PubnativeInsightDataModel;
 import net.pubnative.mediation.insights.model.PubnativeInsightRequestModel;
 import net.pubnative.mediation.insights.model.PubnativeInsightsAPIResponseModel;
 import net.pubnative.mediation.network.PubnativeHttpRequest;
+import net.pubnative.mediation.utils.PubnativeStringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,12 +248,9 @@ public class PubnativeInsightsManager {
                 String pendingListString = preferences.getString(listKey, null);
                 if (!TextUtils.isEmpty(pendingListString)) {
                     try {
-                        PubnativeInsightRequestModel[] cacheModel = new Gson().fromJson(pendingListString, PubnativeInsightRequestModel[].class);
-                        if (cacheModel != null && cacheModel.length > 0) {
-                            result = new ArrayList<PubnativeInsightRequestModel>(Arrays.asList(cacheModel));
-                        }
+                        result = PubnativeStringUtils.convertStringToObject(pendingListString, PubnativeInsightRequestModel.class);
                     } catch (JsonSyntaxException e) {
-                        // Do nothing
+                        Log.e(TAG, "getTrackingList: ", e);
                     }
                 }
             }
@@ -270,7 +267,7 @@ public class PubnativeInsightsManager {
                 if (pendingList == null || pendingList.size() == 0) {
                     editor.remove(listKey);
                 } else {
-                    String cacheModelString = new Gson().toJson(pendingList.toArray());
+                    String cacheModelString = PubnativeStringUtils.convertObjectsToJson(pendingList);
                     if (!TextUtils.isEmpty(cacheModelString)) {
                         editor.putString(listKey, cacheModelString);
                     }

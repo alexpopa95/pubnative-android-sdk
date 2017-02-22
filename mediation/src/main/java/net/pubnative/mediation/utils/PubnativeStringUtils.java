@@ -25,10 +25,20 @@ package net.pubnative.mediation.utils;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PubnativeStringUtils {
 
@@ -64,5 +74,41 @@ public class PubnativeStringUtils {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public static <T> List<T> convertStringToObject(String convertable, Class<T> object) {
+
+        List<T> result;
+        Gson gson = new Gson();
+        JsonArray array = new JsonParser().parse(convertable).getAsJsonArray();
+        result = new ArrayList<T>(array.size());
+        for (JsonElement element : array) {
+            result.add(gson.fromJson(element, object));
+        }
+
+        return result;
+    }
+
+    public static <T> String convertObjectsToJson(List<T> objects) {
+        String result = null;
+        Writer output = new StringWriter();
+        Gson gson = new Gson();
+        try {
+            JsonWriter writer = new JsonWriter(output);
+            writer.beginArray();
+            for (T object : objects) {
+                gson.toJson(object, object.getClass(), writer);
+            }
+            writer.endArray();
+            writer.close();
+
+            output.flush();
+            result = output.toString();
+
+            output.close();
+        } catch (IOException exception) {
+            Log.e(TAG, "convertObjectsToJson: ", exception);
+        }
+        return result;
     }
 }
