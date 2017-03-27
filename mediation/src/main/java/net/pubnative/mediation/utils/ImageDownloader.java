@@ -41,7 +41,7 @@ public class ImageDownloader {
     private WeakReference<Bitmap> mImage;
 
     private Listener mListener;
-    private Handler mHandler;
+    private Handler  mHandler;
 
     /**
      * Interface for callbacks related to image downloader
@@ -49,13 +49,15 @@ public class ImageDownloader {
     public interface Listener {
         /**
          * Called whenever image is loaded either from cache or from network
+         *
          * @param bitmap Image
-         * @param url Url of image
+         * @param url    Url of image
          */
         void onImageLoad(String url, Bitmap bitmap);
 
         /**
          * Called whenever image loading failed
+         *
          * @param url Url of image
          */
         void onImageFailed(String url, Exception exception);
@@ -63,16 +65,17 @@ public class ImageDownloader {
 
     /**
      * Load image
-     * @param url valid url
+     *
+     * @param url      valid url
      * @param listener valid listener
      */
-    public void load(String url, Listener listener) {
+    public void load(String url, net.pubnative.mediation.utils.ImageDownloader.Listener listener) {
 
         Log.v(TAG, "load");
         mHandler = new Handler(Looper.getMainLooper());
-        if(listener == null) {
+        if (listener == null) {
             Log.e(TAG, "Listener is not set, dropping call");
-        } else if(TextUtils.isEmpty(url)) {
+        } else if (TextUtils.isEmpty(url)) {
             invokeFail(url, new Exception("URL is not valid"));
         } else {
             mListener = listener;
@@ -100,19 +103,24 @@ public class ImageDownloader {
                     BitmapFactory.decodeStream(url.openConnection().getInputStream(), new Rect(), options);
 
                     // Calculate size of the image depends of free memory of device
-                    options.inSampleSize = calculateInSampleSize(options);
+                    int sampleSize = 0;
+                    sampleSize = calculateInSampleSize(options);
 
-                    // Get image and allocate memory for it.
-                    // WeakReference using for saving memory here.
-                    options.inJustDecodeBounds = false;
-                    mImage = new WeakReference<Bitmap>(BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options));
+                    if (sampleSize == 0) {
+                        invokeFail(urlString, new Exception("Not enough memory"));
+                    } else {
+                        options.inSampleSize = sampleSize;
+                        // Get image and allocate memory for it.
+                        // WeakReference using for saving memory here.
+                        options.inJustDecodeBounds = false;
+                        mImage = new WeakReference<Bitmap>(BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options));
+                        invokeLoad(urlString);
+                    }
                 } catch (Exception e) {
                     invokeFail(urlString, e);
-                } catch (OutOfMemoryError error) {
+                } catch (Error error) {
                     mImage = null;
                     invokeFail(urlString, new Exception("Out of memory during image downloading"));
-                } finally {
-                    invokeLoad(urlString);
                 }
             }
         }).start();
@@ -127,7 +135,7 @@ public class ImageDownloader {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if(mListener != null && (mImage != null && mImage.get() != null)) {
+                if (mListener != null && (mImage != null && mImage.get() != null)) {
                     mListener.onImageLoad(url, mImage.get());
                 }
             }
@@ -140,7 +148,7 @@ public class ImageDownloader {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if(mListener != null) {
+                if (mListener != null) {
                     mListener.onImageFailed(url, exception);
                 }
             }
@@ -151,23 +159,26 @@ public class ImageDownloader {
      * This method calculates the inSampleSize which create a smaller image than original.
      * It's needed, because when we try to use decodeStream for the big image BitmapFactory
      * allocate memory not only for himself but also and for downloaded image and some processed data.
+     *
      * @param options options for {@link android.graphics.BitmapFactory.Options BitmapFactory.Options}
      * @return int {@link android.graphics.BitmapFactory.Options#inSampleSize inSampleSize} which decoder use to subsample the original image, returning a smaller image to save memory
      */
     protected int calculateInSampleSize(BitmapFactory.Options options) {
 
         Log.v(TAG, "calculateInSampleSize");
-        int bytesPerPixel = 4;
-        int inSampleSize = 1;
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        final int freeMemory = (int) (Runtime.getRuntime().freeMemory());
-        final int pictureSize = width * height * bytesPerPixel;
 
-        if (pictureSize > freeMemory) {
-            inSampleSize = pictureSize / freeMemory;
+        int result = 1;
+        int freeMemory = (int) (Runtime.getRuntime().freeMemory());
+
+        int bytesPerPixel = 4;
+        int pictureSize = options.outWidth * options.outHeight * bytesPerPixel;
+
+        if (freeMemory == 0) {
+            result = 0;
+        } else if (pictureSize > freeMemory && freeMemory > 0) {
+            result = pictureSize / freeMemory;
         }
 
-        return inSampleSize;
+        return result;
     }
 }
