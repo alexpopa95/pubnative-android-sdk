@@ -33,15 +33,13 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
-import com.facebook.ads.ImpressionListener;
 
 import net.pubnative.mediation.exceptions.PubnativeException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FacebookNetworkFeedBannerAdapter extends PubnativeNetworkFeedBannerAdapter
-        implements AdListener, ImpressionListener {
+public class FacebookNetworkFeedBannerAdapter extends PubnativeNetworkFeedBannerAdapter implements AdListener{
 
     private static final String  TAG = FacebookNetworkFeedBannerAdapter.class.getSimpleName();
     //==============================================================================================
@@ -141,7 +139,6 @@ public class FacebookNetworkFeedBannerAdapter extends PubnativeNetworkFeedBanner
 
         Log.v(TAG, "onAdLoaded");
         mIsLoaded = true;
-        mFeedBanner.setImpressionListener(this);
         invokeLoadFinish();
     }
 

@@ -29,7 +29,6 @@ import android.util.Log;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
-import com.facebook.ads.ImpressionListener;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 
@@ -38,9 +37,7 @@ import net.pubnative.mediation.exceptions.PubnativeException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FacebookNetworkInterstitialAdapter extends PubnativeNetworkInterstitialAdapter
-        implements InterstitialAdListener,
-                   ImpressionListener {
+public class FacebookNetworkInterstitialAdapter extends PubnativeNetworkInterstitialAdapter implements InterstitialAdListener{
 
     private static final String TAG = FacebookNetworkInterstitialAdapter.class.getSimpleName();
     private InterstitialAd mInterstitial;
@@ -139,7 +136,6 @@ public class FacebookNetworkInterstitialAdapter extends PubnativeNetworkIntersti
     public void onAdLoaded(Ad ad) {
 
         Log.v(TAG, "onAdLoaded");
-        mInterstitial.setImpressionListener(this);
         invokeLoadFinish();
     }
 

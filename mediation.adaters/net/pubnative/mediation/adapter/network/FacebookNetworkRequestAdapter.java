@@ -128,6 +128,13 @@ public class FacebookNetworkRequestAdapter extends PubnativeNetworkRequestAdapte
     public void onAdClicked(Ad ad) {
 
         Log.v(TAG, "onAdClicked");
-        // Do nothing, just ignore thiss
+        // Do nothing, just ignore this
+    }
+
+    @Override
+    public void onLoggingImpression(Ad ad) {
+
+        Log.v(TAG, "onLoggingImpression");
+        // Do nothing, just ignore this
     }
 }

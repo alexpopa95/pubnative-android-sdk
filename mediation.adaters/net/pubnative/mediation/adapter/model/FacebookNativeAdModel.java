@@ -32,14 +32,12 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
-import com.facebook.ads.ImpressionListener;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 
 import net.pubnative.mediation.request.model.PubnativeAdModel;
 
-public class FacebookNativeAdModel extends PubnativeAdModel implements ImpressionListener,
-                                                                       AdListener {
+public class FacebookNativeAdModel extends PubnativeAdModel implements AdListener {
 
     private static String TAG = FacebookNativeAdModel.class.getSimpleName();
     protected NativeAd mNativeAd;
@@ -49,7 +47,6 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
         if (nativeAd != null) {
             mNativeAd = nativeAd;
             mNativeAd.setAdListener(this);
-            mNativeAd.setImpressionListener(this);
         }
     }
 
@@ -186,17 +183,6 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
     // Callbacks
     //==============================================================================================
 
-    // ImpressionListener
-    //----------------------------------------------------------------------------------------------
-    @Override
-    public void onLoggingImpression(Ad ad) {
-
-        Log.v(TAG, "onLoggingImpression");
-        invokeOnAdImpressionConfirmed();
-    }
-
-    // AdListener
-    //----------------------------------------------------------------------------------------------
     @Override
     public void onError(Ad ad, AdError adError) {
 
@@ -216,5 +202,12 @@ public class FacebookNativeAdModel extends PubnativeAdModel implements Impressio
 
         Log.v(TAG, "onAdClicked");
         invokeOnAdClick();
+    }
+
+    @Override
+    public void onLoggingImpression(Ad ad) {
+
+        Log.v(TAG, "onLoggingImpression");
+        invokeOnAdImpressionConfirmed();
     }
 }
