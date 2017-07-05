@@ -1,1 +1,1 @@
-include ':mediation', ':mediation.demo'
+include ':sdk', ':sdk.demo', ':sdk.adapter.facebook', ':sdk.adapter.admob', ':sdk.adapter.flurry'

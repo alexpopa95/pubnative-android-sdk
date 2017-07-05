@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">sdk.demo</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_native">Native Ad</string>
+    <string name="title_activity_interstitial">Interstitial Ad</string>
+    <string name="title_activity_feed_banner">Feed Banner</string>
+    <string name="title_activity_feed_video">Feed Video</string>
+    <string name="title_activity_banner">Banner</string>
+    <string name="title_activity_video">Video</string>
+
+    <string name="app_token">App Token</string>
+    <string name="placement_id">Placement Id</string>
+    <string name="update">Update</string>
+    <string name="action_settings">Settings</string>
+    <string name="coppa">COPPA</string>
+    <string name="reset_config">Reset Config</string>
+    <string name="cache_aasets">Cache Assets</string>
+    <string name="test_mode">Test Mode</string>
+
+    <string name="qa_mode">Use QA config</string>
+    <string name="dev_mode">Use Dev config</string>
+
+    <string name="target_key">Target Key</string>
+    <string name="target_value">Target Value</string>
+
+    <string name="very_long_string">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis felis at enim rhoncus aliquet. Donec sollicitudin pellentesque arcu vel condimentum. Nullam non est faucibus, maximus massa a, auctor augue.</string>
+
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="test_device_id">Test Device ID</string>
+</resources>

@@ -10,8 +10,32 @@ task projectInfo << {
     println " --------------------------"
     println ""
 }
+
+subprojects {
+
+    def versionBase="2.0.0"
+    def versionBuild=""
+    def versionSuffix=""
+    if (System.getenv("IS_BETA")) {
+        versionBuild=".${System.getenv("CIRCLE_BUILD_NUM")}"
+        versionSuffix="-${System.getenv("CIRCLE_BRANCH")}"
+    }
+    ext {
+        facebookNameVersion = "4.20.0${versionBuild}${versionSuffix}"
+        admobNameVersion = "9.6.1${versionBuild}${versionSuffix}"
+        flurryNameVersion = "6.3.1${versionBuild}${versionSuffix}"
+
+        facebookVersion = "4.20.0"
+        admobVersion = "9.6.1"
+        flurryVersion = "6.3.1"
+    }
+    version = "${versionBase}${versionBuild}${versionSuffix}"
+    group = "net.pubnative"
+}
+
 allprojects {
     repositories {
+        mavenLocal()
         jcenter()
     }
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@color/pubnative_ad_background"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp">
+
+    <ImageView
+        android:id="@+id/pubnative_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"/>
+
+    <RelativeLayout
+        android:id="@+id/pubnative_body"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/pubnative_icon">
+
+        <TextView
+            android:id="@+id/pubnative_callToAction"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/pubnative_cta_background"
+            android:gravity="center"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="@color/pubnative_call_to_action_text_color"
+            android:textSize="@dimen/pubnative_call_to_action_text_size"
+            android:textStyle="bold"
+            tools:text="Lorem Ipsum"/>
+
+        <TextView
+            android:id="@+id/pubnative_ad_text"
+            android:layout_width="18dp"
+            android:layout_height="13dp"
+            android:layout_below="@id/pubnative_title"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/pubnative_ad_text_background"
+            android:gravity="center"
+            android:text="@string/ad"
+            android:textColor="@color/pubnative_call_to_action_text_color"
+            android:textSize="@dimen/pubnative_ad_text_size"/>
+
+        <TextView
+            android:id="@+id/pubnative_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/pubnative_callToAction"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/pubnative_title_text_color"
+            android:textSize="@dimen/pubnative_title_text_size"
+            android:textStyle="bold"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum enim purus, semper et sagittis ac, porttitor nec eros. Morbi ligula risus, iaculis eget orci sed, commodo fermentum urna. Sed convallis consequat nisl sed eleifend. Fusce interdum purus sed molestie varius. Mauris ac est eu nulla egestas interdum. Proin scelerisque sollicitudin faucibus. Etiam congue blandit ex congue cursus. Praesent tellus ex, malesuada in felis non, bibendum mollis turpis. Curabitur ornare vehicula nibh sed sodales. Quisque orci velit, consequat quis sollicitudin id, varius vel eros. Nulla ut rhoncus felis, ut euismod ex. Aenean orci lacus, ultrices nec ligula sit amet, euismod lacinia diam. Nullam eget posuere mauris."/>
+
+        <TextView
+            android:id="@+id/pubnative_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/pubnative_title"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/pubnative_callToAction"
+            android:layout_toRightOf="@id/pubnative_ad_text"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="0.8"
+            android:maxLines="2"
+            android:textColor="@color/pubnative_description_text_color"
+            android:textSize="@dimen/pubnative_description_text_size"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum enim purus, semper et sagittis ac, porttitor nec eros. Morbi ligula risus, iaculis eget orci sed, commodo fermentum urna. Sed convallis consequat nisl sed eleifend. Fusce interdum purus sed molestie varius. Mauris ac est eu nulla egestas interdum. Proin scelerisque sollicitudin faucibus. Etiam congue blandit ex congue cursus. Praesent tellus ex, malesuada in felis non, bibendum mollis turpis. Curabitur ornare vehicula nibh sed sodales. Quisque orci velit, consequat quis sollicitudin id, varius vel eros. Nulla ut rhoncus felis, ut euismod ex. Aenean orci lacus, ultrices nec ligula sit amet, euismod lacinia diam. Nullam eget posuere mauris."/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/pubnative_content_info_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

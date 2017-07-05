@@ -1,0 +1,139 @@
+// The MIT License (MIT)
+//
+// Copyright (c) 2017 PubNative GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+//==================================================================================================
+// PROJECT
+//==================================================================================================
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        // Android
+        classpath 'com.android.tools.build:gradle:2.2.0'
+        // Bintray
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
+}
+task projectInfo << {
+    println ""
+    println " === ${project.group}:${project.name}:${project.version} - (${System.getenv("CIRCLE_BUILD_NUM")}) ==="
+    println ""
+}
+
+version = "4.22.1"
+def project_name = project.name
+def version_name = version
+if (System.getenv("IS_BETA")) {
+    version_name = "${version_name}.${System.getenv("CIRCLE_BUILD_NUM")}"
+    project_name = "${project_name}.beta"
+}
+//==================================================================================================
+// ANDROID
+//==================================================================================================
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionName version_name
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+configurations{
+    provided
+}
+
+android.libraryVariants.all {
+    variant -> variant.javaCompile.classpath += configurations.provided
+}
+
+dependencies {
+    provided project(':sdk')
+    provided "com.facebook.android:audience-network-sdk:${version}"
+}
+//==================================================================================================
+// CIRCLE CI
+//==================================================================================================
+//----------------------------------------------------------------------------------------------
+// MAVEN
+// ----------------------------------------------------------------------------------------------
+apply plugin: 'maven-publish'
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+publishing {
+    publications {
+
+        aar(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version version_name
+            if (!System.getenv("IS_BETA")) {
+                artifact sourcesJar
+            }
+            android.libraryVariants.all { variant ->
+                if (variant.buildType.name == "debug") return
+                artifact variant.outputs[0].packageLibrary // This is the aar library
+            }
+        }
+    }
+}
+//----------------------------------------------------------------------------------------------
+// BINTRAY
+//----------------------------------------------------------------------------------------------
+apply plugin: 'com.jfrog.bintray'
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_API_KEY")
+    publish = System.getenv("IS_BETA") ? true : false
+    publications = ['aar']
+    pkg {
+        userOrg = 'pubnative'
+        repo = 'maven'
+        name = project_name
+        licenses = ['MIT']
+        labels = ['android', 'advertising', 'sdk', 'pubnative', 'ads', 'nativeads', 'development', 'facebook', 'adapter']
+        version {
+            name = version_name
+            vcsTag = version_name
+            released = new Date()
+            vcsUrl = System.getenv("CIRCLE_REPOSITORY_URL")
+        }
+    }
+}
+//}

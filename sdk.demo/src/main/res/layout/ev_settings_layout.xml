@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+            android:id="@+id/ll_title_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true">
+
+        <TextView
+                android:text="Title:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_title_color"/>
+
+        <com.rtugeek.android.colorseekbar.ColorSeekBar
+                android:id="@+id/titleColorSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/ll_desc_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@id/ll_title_color">
+
+        <TextView
+                android:text="Description:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_description_color"/>
+
+        <com.rtugeek.android.colorseekbar.ColorSeekBar
+                android:id="@+id/descColorSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/ll_cta_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@id/ll_desc_color">
+
+        <TextView
+                android:text="CallToAction:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_cta_color"/>
+
+        <com.rtugeek.android.colorseekbar.ColorSeekBar
+                android:id="@+id/ctaColorSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/ll_layout_bg_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@id/ll_cta_color">
+
+        <TextView
+                android:text="Background:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_layout_bg_color"/>
+
+        <com.rtugeek.android.colorseekbar.ColorSeekBar
+                android:id="@+id/layoutBgColorSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView android:text="Icon position"
+              android:id="@+id/tv_icon_header"
+              android:layout_below="@id/ll_layout_bg_color"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content">
+
+    </TextView>
+
+    <RadioGroup
+            android:id="@+id/rg_icon_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/tv_icon_header">
+
+        <RadioButton
+                android:id="@+id/rb_icon_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Left"/>
+
+        <RadioButton
+                android:id="@+id/rb_icon_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Right"/>
+
+    </RadioGroup>
+
+    <TextView android:text="Banner position"
+              android:id="@+id/tv_banner_header"
+              android:layout_below="@id/rg_icon_position"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content">
+
+    </TextView>
+
+    <RadioGroup
+            android:id="@+id/rg_banner_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/tv_banner_header">
+
+        <RadioButton
+                android:id="@+id/rb_banner_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top"/>
+
+        <RadioButton
+            android:id="@+id/rb_banner_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Center"/>
+
+        <RadioButton
+                android:id="@+id/rb_banner_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bottom"/>
+
+    </RadioGroup>
+
+    <Button
+            android:id="@+id/btn_ev_save_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rg_banner_position"
+            android:text="Save configuration"/>
+
+</RelativeLayout>

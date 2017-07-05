@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pubnative_ad_background">#ffffff</color>
+    <color name="pubnative_title_text_color">#000000</color>
+    <color name="pubnative_description_text_color">#222222</color>
+    <color name="pubnative_call_to_action_text_color">#ffffff</color>
+    <color name="pubnative_call_to_action_background_color">#2e7de1</color>
+    <color name="pubnative_content_info_background_color">#CCF0F8FF</color>
+</resources>

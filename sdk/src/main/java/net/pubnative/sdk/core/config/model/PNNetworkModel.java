@@ -1,0 +1,89 @@
+// The MIT License (MIT)
+//
+// Copyright (c) 2017 PubNative GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+package net.pubnative.sdk.core.config.model;
+
+import java.util.Map;
+
+public class PNNetworkModel {
+
+    public Map<String, String> params;
+    public String              adapter;
+    public Boolean             crash_report;
+    public Integer             timeout;
+    public Boolean             ad_cache;
+    public Integer             ad_cache_timeout;
+    public Integer             ad_cache_ttl;
+    public Boolean             cpa_cache;
+
+
+    //==============================================================================================
+    // PNNetworkModel
+    //==============================================================================================
+    public int getAdCacheTimeout() {
+        int result = 0;
+        if (ad_cache_timeout != null) {
+            result = ad_cache_timeout;
+        }
+        return result;
+    }
+
+    public int getTimeout() {
+        int result = 0;
+        if (timeout != null) {
+            result = timeout;
+        }
+        return result;
+    }
+
+    public int getCacheExpirationTime() {
+        int result = 0;
+        if (ad_cache_ttl != null) {
+            result = ad_cache_ttl;
+        }
+        return result;
+    }
+
+    public boolean isCPACacheEnabled() {
+        boolean result = false;
+        if (cpa_cache != null) {
+            result = cpa_cache;
+        }
+        return result;
+    }
+
+    public boolean isAdCacheEnabled() {
+        boolean result = false;
+        if (ad_cache != null) {
+            result = ad_cache;
+        }
+        return result;
+    }
+
+    public boolean isCrashReportEnabled() {
+        boolean result = false;
+        if (crash_report != null) {
+            result = crash_report;
+        }
+        return result;
+    }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pubnative_title_text_size">13.5sp</dimen>
+    <dimen name="pubnative_description_text_size">11sp</dimen>
+    <dimen name="pubnative_ad_text_size">9sp</dimen>
+    <dimen name="pubnative_social_context_size">8sp</dimen>
+    <dimen name="pubnative_call_to_action_text_size">13.5dp</dimen>
+</resources>
