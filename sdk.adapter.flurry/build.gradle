@@ -19,7 +19,7 @@ task projectInfo << {
     println ""
 }
 
-version = "6.9.2"
+version = "$project.version-$flurryVersion"
 def project_name = project.name
 def version_name = version
 if (System.getenv("IS_BETA")) {
@@ -60,8 +60,8 @@ android.libraryVariants.all {
 
 dependencies {
     compile project(':sdk')
-    provided "com.flurry.android:analytics:${version}"
-    provided "com.flurry.android:ads:${version}"
+    provided "com.flurry.android:analytics:$flurryVersion"
+    provided "com.flurry.android:ads:$flurryVersion"
 }
 //==================================================================================================
 // CIRCLE CI

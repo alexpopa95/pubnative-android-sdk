@@ -19,7 +19,7 @@ task projectInfo << {
     println ""
 }
 
-version = "9.6.1"
+version = "$project.version-$admobVersion"
 def project_name = project.name
 def version_name = version
 if (System.getenv("IS_BETA")) {
@@ -59,7 +59,7 @@ android.libraryVariants.all {
 
 dependencies {
     provided project(':sdk')
-    provided "com.google.firebase:firebase-ads:${version}"
+    provided "com.google.firebase:firebase-ads:$admobVersion"
 }
 //==================================================================================================
 // CIRCLE CI

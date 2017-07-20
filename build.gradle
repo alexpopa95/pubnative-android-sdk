@@ -13,7 +13,7 @@ task projectInfo << {
 
 subprojects {
 
-    def versionBase="2.0.0"
+    def versionBase="2.0.1"
     def versionBuild=""
     def versionSuffix=""
     if (System.getenv("IS_BETA")) {
@@ -21,11 +21,7 @@ subprojects {
         versionSuffix="-${System.getenv("CIRCLE_BRANCH")}"
     }
     ext {
-        facebookNameVersion = "4.20.0${versionBuild}${versionSuffix}"
-        admobNameVersion = "9.6.1${versionBuild}${versionSuffix}"
-        flurryNameVersion = "6.3.1${versionBuild}${versionSuffix}"
-
-        facebookVersion = "4.20.0"
+        facebookVersion = "4.22.1"
         admobVersion = "9.6.1"
         flurryVersion = "6.3.1"
     }
@@ -35,7 +31,6 @@ subprojects {
 
 allprojects {
     repositories {
-        mavenLocal()
         jcenter()
     }
 }

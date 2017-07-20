@@ -41,7 +41,7 @@ task projectInfo << {
     println ""
 }
 
-version = "4.22.1"
+version = "$project.version-$facebookVersion"
 def project_name = project.name
 def version_name = version
 if (System.getenv("IS_BETA")) {
@@ -83,7 +83,7 @@ android.libraryVariants.all {
 
 dependencies {
     provided project(':sdk')
-    provided "com.facebook.android:audience-network-sdk:${version}"
+    provided "com.facebook.android:audience-network-sdk:$facebookVersion"
 }
 //==================================================================================================
 // CIRCLE CI
