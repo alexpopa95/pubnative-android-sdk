@@ -33,6 +33,7 @@ import android.util.Log;
 
 import net.pubnative.api.core.network.PNAPIHttpRequest;
 import net.pubnative.api.core.tracking.model.PNAPITrackingURLModel;
+import net.pubnative.sdk.core.utils.PNStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +157,7 @@ public class PNAPITrackingManager {
         if (sharedPendingString == null) {
             result = new ArrayList<PNAPITrackingURLModel>();
         } else {
-            result = new Gson().fromJson(sharedPendingString, new TypeToken<List<PNAPITrackingURLModel>>() {}.getType());
+            result = PNStringUtils.convertStringToObjects(sharedPendingString, PNAPITrackingURLModel.class);
         }
         return result;
     }
@@ -167,7 +168,7 @@ public class PNAPITrackingManager {
         if (value == null) {
             preferencesEditor.remove(key);
         } else {
-            String listString = new Gson().toJson(value);
+            String listString = PNStringUtils.convertObjectsToJson(value);
             preferencesEditor.putString(key, listString);
         }
         preferencesEditor.apply();
