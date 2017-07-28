@@ -206,7 +206,7 @@ public class PNRequest extends PNWaterfall implements PNAdapter.LoadListener {
     }
 
     protected void cache() {
-        if (mPlacement != null && mPlacement.isAdCacheEnabled()) {
+        if (mPlacement != null && mPlacement.isAdCacheEnabled() && mPlacement.hasNetworkCacheEnabled()) {
             PNCacheManager.cachePlacement(mContext,
                                           mPlacement.getAppToken(),
                                           mPlacement.getName(),

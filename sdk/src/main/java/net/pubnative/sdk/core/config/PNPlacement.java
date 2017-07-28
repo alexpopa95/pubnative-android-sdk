@@ -291,6 +291,27 @@ public class PNPlacement {
     }
 
     /**
+     * Tells if this any network from this placement has ad caching enabled
+     *
+     * @return true if ad fetchAssets is enabled for the network, false if not
+     */
+    public boolean hasNetworkCacheEnabled() {
+        boolean result = false;
+        if (mPlacementModel != null) {
+            for (Map.Entry<String, PNNetworkModel> networkModelEntry : mConfigModel.networks.entrySet()) {
+                PNNetworkModel network = networkModelEntry.getValue();
+
+                if (network.ad_cache) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
      * Waterfalls to the next network
      */
     public void next() {

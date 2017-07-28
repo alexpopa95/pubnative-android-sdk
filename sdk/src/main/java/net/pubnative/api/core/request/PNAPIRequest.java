@@ -304,6 +304,8 @@ public class PNAPIRequest implements PNAPIHttpRequest.Listener {
             apiResponseModel = new Gson().fromJson(result, PNAPIV3ResponseModel.class);
         } catch (Exception exception) {
             parseException = exception;
+        } catch (Error error) {
+            parseException = new Exception("Response can not be parsed!", error);
         }
         if (parseException != null) {
             invokeOnFail(parseException);

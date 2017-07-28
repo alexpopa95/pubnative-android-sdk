@@ -13,7 +13,7 @@ task projectInfo << {
 
 subprojects {
 
-    def versionBase="2.0.2"
+    def versionBase="2.0.3"
     def versionBuild=""
     def versionSuffix=""
     if (System.getenv("IS_BETA")) {

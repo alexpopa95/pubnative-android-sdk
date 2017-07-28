@@ -159,6 +159,8 @@ public class PNAPIHttpRequest {
 
         } catch (Exception exception) {
             invokeFail(exception);
+        } catch (Error error) {
+            invokeFail(new Exception("Request finished with the error!", error));
         }
     }
 
