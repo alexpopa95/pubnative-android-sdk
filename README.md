@@ -6,4 +6,4 @@
 
 Pubnative SDK is an Open Source advertising solution with remote control using the PubNative Dashboard.
 
-All the documentation is located under the [GitHub wiki](https://github.com/pubnative/pubnative-android-sdk-private/wiki)
+All the documentation is located under the [GitHub wiki](https://github.com/pubnative/pubnative-android-sdk/wiki)
