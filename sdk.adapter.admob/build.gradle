@@ -19,13 +19,13 @@ task projectInfo << {
     println ""
 }
 
-version = "$project.version-$admobVersion"
 def project_name = project.name
-def version_name = version
+def version_name = "$project.version-$admobVersion"
 if (System.getenv("IS_BETA")) {
-    version_name = "${version_name}.${System.getenv("CIRCLE_BUILD_NUM")}"
+    version_name = "${version_name}-${branchName}.${buildNumber}"
     project_name = "${project_name}.beta"
 }
+version = version_name
 //==================================================================================================
 // ANDROID
 //==================================================================================================

@@ -13,19 +13,14 @@ task projectInfo << {
 
 subprojects {
 
-    def versionBase="2.0.3"
-    def versionBuild=""
-    def versionSuffix=""
-    if (System.getenv("IS_BETA")) {
-        versionBuild=".${System.getenv("CIRCLE_BUILD_NUM")}"
-        versionSuffix="-${System.getenv("CIRCLE_BRANCH")}"
-    }
     ext {
         facebookVersion = "4.22.1"
         admobVersion = "9.6.1"
         flurryVersion = "6.3.1"
+        branchName = "${System.getenv("CIRCLE_BRANCH")}"
+        buildNumber = "${System.getenv("CIRCLE_BUILD_NUM")}"
     }
-    version = "${versionBase}${versionBuild}${versionSuffix}"
+    version = "2.0.4"
     group = "net.pubnative"
 }
 

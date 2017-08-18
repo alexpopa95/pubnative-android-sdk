@@ -140,10 +140,13 @@ public class PNAPIHttpRequest {
     }
 
     protected void doRequest(String urlString, String userAgent) {
+
+        HttpURLConnection connection = null;
+
         try {
             // 1. Create connection
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("User-Agent", userAgent);
             // 2. Set connection properties
             connection.setRequestMethod("GET");
@@ -153,7 +156,9 @@ public class PNAPIHttpRequest {
             connection.connect();
 
             int statusCode = connection.getResponseCode();
-            String result = getString(connection.getInputStream());
+            InputStream input = connection.getInputStream();
+            String result = getString(input);
+            input.close();
 
             invokeFinish(result, statusCode);
 
@@ -161,6 +166,10 @@ public class PNAPIHttpRequest {
             invokeFail(exception);
         } catch (Error error) {
             invokeFail(new Exception("Request finished with the error!", error));
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 

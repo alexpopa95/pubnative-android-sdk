@@ -169,9 +169,11 @@ public class PNHttpRequest {
             connection.connect();
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = connection.getInputStream();
                 try {
-                    invokeFinish(stringFromInputStream(inputStream));
+                    InputStream inputStream = connection.getInputStream();
+                    String result = stringFromInputStream(inputStream);
+                    inputStream.close();
+                    invokeFinish(result);
                 } catch (PNException ex) {
                     invokeFail(ex);
                 }
