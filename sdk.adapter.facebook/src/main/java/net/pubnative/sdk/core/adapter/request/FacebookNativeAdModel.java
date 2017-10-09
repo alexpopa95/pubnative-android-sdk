@@ -45,7 +45,7 @@ import java.util.List;
 public class FacebookNativeAdModel extends PNAdModel implements AdListener {
 
     private static String TAG = FacebookNativeAdModel.class.getSimpleName();
-    protected NativeAd  mNativeAd;
+    protected NativeAd mNativeAd;
     protected MediaView mMediaView;
     private boolean mTrackEntireLayout = true;
 
@@ -103,7 +103,7 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
     @Override
     public View getBanner() {
 
-        if(mMediaView == null) {
+        if (mMediaView == null) {
             mMediaView = new MediaView(mContext);
             mMediaView.setNativeAd(mNativeAd);
         }
@@ -161,7 +161,7 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
     // Tracking
     //----------------------------------------------------------------------------------------------
 
-    public PNAdModel trackEntireLayout(boolean trackEntireLayout) {
+    public FacebookNativeAdModel trackEntireLayout(boolean trackEntireLayout) {
         mTrackEntireLayout = trackEntireLayout;
         return this;
     }
@@ -169,7 +169,7 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
     @Override
     public void startTracking(ViewGroup adView) {
         if (mNativeAd != null && adView != null) {
-            if(mTrackEntireLayout) {
+            if (mTrackEntireLayout) {
                 mNativeAd.registerViewForInteraction(adView);
             } else {
                 mNativeAd.registerViewForInteraction(adView, prepareClickableViewList());
