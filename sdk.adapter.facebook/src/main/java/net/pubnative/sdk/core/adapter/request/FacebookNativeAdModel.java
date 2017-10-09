@@ -24,6 +24,7 @@
 package net.pubnative.sdk.core.adapter.request;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +39,15 @@ import com.facebook.ads.NativeAd;
 
 import net.pubnative.sdk.core.request.PNAdModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FacebookNativeAdModel extends PNAdModel implements AdListener {
 
     private static String TAG = FacebookNativeAdModel.class.getSimpleName();
     protected NativeAd  mNativeAd;
     protected MediaView mMediaView;
+    private boolean mTrackEntireLayout = true;
 
     public FacebookNativeAdModel(Context context, NativeAd nativeAd) {
         super(context);
@@ -156,10 +161,19 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
     // Tracking
     //----------------------------------------------------------------------------------------------
 
+    public PNAdModel trackEntireLayout(boolean trackEntireLayout) {
+        mTrackEntireLayout = trackEntireLayout;
+        return this;
+    }
+
     @Override
     public void startTracking(ViewGroup adView) {
         if (mNativeAd != null && adView != null) {
-            mNativeAd.registerViewForInteraction(adView);
+            if(mTrackEntireLayout) {
+                mNativeAd.registerViewForInteraction(adView);
+            } else {
+                mNativeAd.registerViewForInteraction(adView, prepareClickableViewList());
+            }
         }
     }
 
@@ -168,6 +182,33 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
         if (mNativeAd != null) {
             mNativeAd.unregisterView();
         }
+    }
+
+    @NonNull
+    private List<View> prepareClickableViewList() {
+        List<View> clickableViews = new ArrayList<>();
+        if (mBannerView != null) {
+            clickableViews.add(mBannerView);
+        }
+        if (mTitleView != null) {
+            clickableViews.add(mTitleView);
+        }
+        if (mDescriptionView != null) {
+            clickableViews.add(mDescriptionView);
+        }
+        if (mCallToActionView != null) {
+            clickableViews.add(mCallToActionView);
+        }
+        if (mIconView != null) {
+            clickableViews.add(mIconView);
+        }
+        if (mRatingView != null) {
+            clickableViews.add(mRatingView);
+        }
+        if (mContentInfoView != null) {
+            clickableViews.add(mContentInfoView);
+        }
+        return clickableViews;
     }
 
     //==============================================================================================
