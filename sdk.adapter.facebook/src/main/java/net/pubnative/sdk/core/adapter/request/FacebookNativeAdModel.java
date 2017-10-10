@@ -40,6 +40,7 @@ import com.facebook.ads.NativeAd;
 import net.pubnative.sdk.core.request.PNAdModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FacebookNativeAdModel extends PNAdModel implements AdListener {
@@ -187,27 +188,14 @@ public class FacebookNativeAdModel extends PNAdModel implements AdListener {
     @NonNull
     private List<View> prepareClickableViewList() {
         List<View> clickableViews = new ArrayList<>();
-        if (mBannerView != null) {
-            clickableViews.add(mBannerView);
-        }
-        if (mTitleView != null) {
-            clickableViews.add(mTitleView);
-        }
-        if (mDescriptionView != null) {
-            clickableViews.add(mDescriptionView);
-        }
-        if (mCallToActionView != null) {
-            clickableViews.add(mCallToActionView);
-        }
-        if (mIconView != null) {
-            clickableViews.add(mIconView);
-        }
-        if (mRatingView != null) {
-            clickableViews.add(mRatingView);
-        }
-        if (mContentInfoView != null) {
-            clickableViews.add(mContentInfoView);
-        }
+        clickableViews.add(mBannerView);
+        clickableViews.add(mTitleView);
+        clickableViews.add(mDescriptionView);
+        clickableViews.add(mCallToActionView);
+        clickableViews.add(mIconView);
+        clickableViews.add(mRatingView);
+        clickableViews.add(mContentInfoView);
+        clickableViews.removeAll((Collections.singleton((View) null)));
         return clickableViews;
     }
 
